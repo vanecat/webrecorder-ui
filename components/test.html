@@ -1,0 +1,22 @@
+<script type="text/x-template" id="test">
+<div>Test component {{testProp}} / {{testData}}</div>
+</script>
+
+<script type="text/javascript">
+    Pywb.vue.components['test'] = {
+        props: ['testProp'],
+        template: '#test',
+        data: function() {
+            return {
+                testData: {a:5, b:6}
+            };
+        },
+        mounted: function() {
+        },
+        methods: {
+            isTest: function () {
+                return true;
+            }
+        }
+    };
+</script>
