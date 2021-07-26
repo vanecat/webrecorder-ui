@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Data</title>
+    <script src="../model.js"></script>
+    <script src="../data.js"></script>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <div v-for="msg in msgs">{{msg}}</div>
+    {{snaps.length}}
+    <div v-for="s in snaps">{{s.year}}-{{s.month}}-{{s.day}} {{s.hour}}:{{s.minute}}</div>
+    <div v-for="p in periods">{{p.type}}: {{p.id}}
+        <div v-for="p1 in p.children">&nbsp;&nbsp;
+            {{p1.type}}: {{p1.id}}
+            <div v-for="p2 in p1.children">&nbsp;&nbsp;&nbsp;&nbsp;
+                {{p2.type}}: {{p2.id}}
+                <div v-for="p3 in p2.children">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    {{p3.type}}: {{p3.id}}
+                    <div v-for="s in p3.snapshots">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        {{s.id}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    function init(data) {
+        new Vue({
+            el: '#app',
+            data: {
+                msgs: [],
+                snaps: [],
+                periods: [],
+                monthLabels: {1:'Jan', 2:'Feb',3:'Mar',4:'Apr',5:'May',6:'Jun',7:'Jul',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'}
+            },
+            mounted() {
+                try {
+                    const all = Pywb.makeData(data);
+                    this.snaps = all.snapshots;
+                    this.periods = all.children;
+                } catch(e) {
+                    this.msgs.push(e.message);
+                }
+            },
+            methods: {
+            }
+        });
+    }
+    fetch('/data-sample.json').then(r => r.json()).then(data => init(data));
+</script>
+</body>
+</html>

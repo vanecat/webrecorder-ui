@@ -1,0 +1,36 @@
+[
+  {
+    "urlkey": "uk,gov)/",
+    "timestamp": "20130415190618",
+    "url": "http://www.gov.uk/",
+    "mime": "application/http",
+    "status": "301",
+    "digest": "3I42H3S6NNFQ2MSVX7XZKYAYSCX5QBYJ",
+    "redirect": "-",
+    "robotflags": "-",
+    "length": "0",
+    "offset": "976147332",
+    "filename": "/heritrix/output/warcs/crawl1-20130412144637/BL-20130415184139819-00531-23604~crawler02~8444.warc.gz",
+    "load_url": "https://www.webarchive.org.uk/wayback/archive/20130415190618id_/http://www.gov.uk/",
+    "source": "archive",
+    "source-coll": "archive",
+    "access": "allow"
+  },
+  {
+    "urlkey": "uk,gov)/",
+    "timestamp": "20130415190622",
+    "url": "https://www.gov.uk/",
+    "mime": "text/html",
+    "status": "200",
+    "digest": "RS3TOVGAFXZ5OHUFNDFMHHHDPID7QOOV",
+    "redirect": "-",
+    "robotflags": "-",
+    "length": "0",
+    "offset": "549380249",
+    "filename": "/heritrix/output/warcs/crawl1-20130412144637/BL-20130415185314762-00533-23604~crawler02~8444.warc.gz",
+    "load_url": "https://www.webarchive.org.uk/wayback/archive/20130415190622id_/https://www.gov.uk/",
+    "source": "archive",
+    "source-coll": "archive",
+    "access": "allow"
+  }
+]
