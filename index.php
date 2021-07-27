@@ -25,6 +25,7 @@
 <?php echo file_get_contents('./components/summary.html'); ?>
 
 <div id="app">
+    <div class="logo"><img src="/static/webarch-logo.png" /></div>
     <div class="nav">
         <div class="url"><select v-model="url">
                 <option>url</option>
@@ -89,9 +90,17 @@
 </script>
 
 <style>
+    #app {
+        border-bottom: 1px solid lightcoral;
+        height: 100px;
+    }
     .iframe iframe {
         width: 100%;
-        height: 100%;
+        height: 80vh;
+    }
+    .logo {
+        float: left;
+        margin-right: 30px;
     }
     .nav .summary, .nav .url {
         display: inline-block;
