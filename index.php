@@ -36,6 +36,7 @@
         <timeline-summary
                 v-if="currentPeriod"
                 :period="currentPeriod"
+                :current-snapshot="currentSnapshot"
                 @goto-period="gotoPeriod"
         ></timeline-summary>
     </div>
@@ -46,7 +47,6 @@
             @goto-snapshot="gotoSnapshot"
     ></timeline>
     <div class="iframe" v-if="currentSnapshot">
-        {{currentSnapshot.getTimeDateFormatted()}}
         <iframe :src="currentSnapshot.load_url"></iframe>
     </div>
 </div>

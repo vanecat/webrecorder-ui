@@ -3,13 +3,21 @@
         <template v-if="parents">
             <span v-for="parent in parents" class="item"><a class="goto" @click="changePeriod(parent)">{{parent.getReadableId()}}</a> &gt;</span>
         </template>
-        <span class="item">{{period.getReadableId()}}</span>
+        <span class="item">{{period.getReadableId()}} <span v-if="currentSnapshot">&gt;</span></span>
+        <span class="item" v-if="currentSnapshot">{{currentSnapshot.getTimeFormatted()}}</span>
     </div>
 </script>
 
 <script type="text/javascript">
     Pywb.vue.components['timeline-summary'] = {
-        props: ['period'],
+        props: {
+            period: {
+                required: true
+            },
+            currentSnapshot: {
+                required: false
+            }
+        },
         template: '#timeline-summary',
         computed: {
             parents: function() {
@@ -41,6 +49,6 @@
      }
 
     .summary .item {
-        margin: 0 10px;
+        margin: 0 5px;
     }
 </style>
