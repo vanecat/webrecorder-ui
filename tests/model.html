@@ -18,14 +18,14 @@
         <div v-for="s in snaps">{{s.year}}-{{s.month}}-{{s.day}} {{s.hour}}:{{s.minute}}</div>
     </div>
     <div v-if="timeline">
-        <div><strong>timeline ({{timeline.snapshotCount}} snaps in {{timeline.id}} {{timeline.getTypeText()}}, max {{getGrandchildTypeText(timeline)}}: {{timeline.maxGrandchildSnapshotCount}})</strong></div>
-        <div v-for="p in timeline.children"><strong>{{p.id}}</strong> ({{p.snapshotCount}} in {{p.getTypeText()}}, max {{getGrandchildTypeText(p)}}: {{p.maxGrandchildSnapshotCount}}))
+        <div><strong>timeline ({{timeline.snapshotCount}} snaps in {{timeline.id}} {{timeline.getTypeLabel()}}, max {{getGrandchildTypeText(timeline)}}: {{timeline.maxGrandchildSnapshotCount}})</strong></div>
+        <div v-for="p in timeline.children"><strong>{{p.id}}</strong> ({{p.snapshotCount}} in {{p.getTypeLabel()}}, max {{getGrandchildTypeText(p)}}: {{p.maxGrandchildSnapshotCount}}))
             <div v-for="p1 in p.children">&nbsp;&nbsp;
-                <strong>{{monthLabels[p1.id]}}</strong> ({{p1.snapshotCount}} in {{p1.getTypeText()}}, max {{getGrandchildTypeText(p1)}}: {{p1.maxGrandchildSnapshotCount}})))
+                <strong>{{monthLabels[p1.id]}}</strong> ({{p1.snapshotCount}} in {{p1.getTypeLabel()}}, max {{getGrandchildTypeText(p1)}}: {{p1.maxGrandchildSnapshotCount}})))
                 <div v-for="p2 in p1.children">&nbsp;&nbsp;&nbsp;&nbsp;
-                    <strong>{{p2.id}}th</strong> ({{p2.snapshotCount}} in {{p2.getTypeText()}}, max {{getGrandchildTypeText(p2)}})
+                    <strong>{{p2.id}}th</strong> ({{p2.snapshotCount}} in {{p2.getTypeLabel()}}, max {{getGrandchildTypeText(p2)}})
                     <div v-for="p3 in p2.children">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <strong>{{p3.id}}:00</strong> ({{p3.snapshotCount}} in {{p3.getTypeText()}})
+                        <strong>{{p3.id}}:00</strong> ({{p3.snapshotCount}} in {{p3.getTypeLabel()}})
                         <div v-for="s in p3.snapshots">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             - {{s.id}}
                         </div>
@@ -50,20 +50,21 @@
             },
             mounted() {
                 try {
-                    this.timeline = Pywb.makeData(data);
-                    this.snaps = this.timeline.snapshots;
+                    const {groupped, linear} = Pywb.makeData(data);
+                    this.snaps = linear;
+                    this.timeline = groupped;
                 } catch(e) {
                     this.msgs.push(e.message);
                 }
             },
             methods: {
                 getGrandchildTypeText(period) {
-                    return PywbPeriod.GetTypeText(period.type+2);
+                    return PywbPeriod.GetTypeLabel(period.type+2);
                 }
             }
         });
     }
-    fetch('/data-sample-medium.json').then(r => r.json()).then(data => init(data));
+    fetch('/data-sample-long.json').then(r => r.json()).then(data => init(data));
 </script>
 </body>
 </html>
