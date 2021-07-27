@@ -26,6 +26,5 @@ Pywb.makeData = (rawSnaps) => {
         linear.push(snap);
     });
 
-    //console.log('monthly max for all time',all.max);
     return {groupped: all, linear};
 };
