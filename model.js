@@ -1,3 +1,5 @@
+const PywbMonthLabels = {1:'Jan', 2:'Feb',3:'Mar',4:'Apr',5:'May',6:'Jun',7:'Jul',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'};
+
 /* ---------------- SNAP SHOT object ----------------- */
 function PywbSnapshot(init) {
     this.year = parseInt(init.timestamp.substr(0, 4));
@@ -24,7 +26,7 @@ function PywbSnapshot(init) {
 }
 
 PywbSnapshot.prototype.getTimeDateFormatted = function() {
-    return `${this.year}-${this.month}-${this.day} ${this.getTimeFormatted()}`;
+    return `${this.year}-${PywbMonthLabels[this.month]}-${this.day} ${this.getTimeFormatted()}`;
 }
 PywbSnapshot.prototype.getTimeFormatted = function() {
     return (this.hour < 13 ? this.hour : (this.hour % 12)) + ':' + ((this.minute < 10 ? '0':'')+this.minute) + ' ' + (this.hour < 12 ? 'am':'pm');
@@ -136,7 +138,6 @@ PywbPeriod.prototype.setSnapshot = function(snap) {
     }
 };
 
-PywbPeriod.monthLabels = {1:'Jan', 2:'Feb',3:'Mar',4:'Apr',5:'May',6:'Jun',7:'Jul',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'};
 PywbPeriod.prototype.getReadableId = function() {
     switch (this.type) {
         case PywbPeriod.Type.all:
@@ -144,7 +145,7 @@ PywbPeriod.prototype.getReadableId = function() {
         case PywbPeriod.Type.year:
             return this.id;
         case PywbPeriod.Type.month:
-            return PywbPeriod.monthLabels[this.id];
+            return PywbMonthLabels[this.id];
         case PywbPeriod.Type.day:
             return (this.id < 10 ? '0':'') + this.id;
         case PywbPeriod.Type.hour:
