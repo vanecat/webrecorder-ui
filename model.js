@@ -107,17 +107,16 @@ PywbPeriod.prototype.addSnapshot = function(snap, noCounting) {
 
     this.snapshotCount++;
     let parent = this.parent;
-    let grandChild = this;
-    let grandParent = parent.parent;
+    let child = this;
     while (parent) {
         parent.snapshotCount++;
 
+        let grandParent = parent.parent;
         if (grandParent) { // grandparent
-            grandParent.maxGrandchildSnapshotCount = Math.max(grandParent.maxGrandchildSnapshotCount, grandChild.snapshotCount);
+            grandParent.maxGrandchildSnapshotCount = Math.max(grandParent.maxGrandchildSnapshotCount, child.snapshotCount);
         }
-        grandChild = parent;
+        child = parent;
         parent = parent.parent;
-        grandParent = grandParent.parent;
     }
 };
 
