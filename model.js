@@ -30,7 +30,7 @@ PywbSnapshot.prototype.getTimeFormatted = function() {
     return (this.hour < 13 ? this.hour : (this.hour % 12)) + ':' + ((this.minute < 10 ? '0':'')+this.minute) + ' ' + (this.hour < 12 ? 'am':'pm');
 }
 
-/* ---------------- SNAP SHOT object ----------------- */
+/* ---------------- PERIOD object ----------------- */
 function PywbPeriod(init) {
     this.type = init.type;
     this.id = init.id;
