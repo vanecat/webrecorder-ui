@@ -50,8 +50,8 @@ function PywbPeriod(init) {
 
     this.lastScroll = init.lastScroll;
 }
-PywbPeriod.Type = {all: 0,year: 1,month: 2,day: 3,hour: 4};
-PywbPeriod.TypeString = ['all','year','month','day','hour'];
+PywbPeriod.Type = {all: 0,year: 1,month: 2,day: 3,hour: 4,snapshot:5};
+PywbPeriod.TypeString = ['timeline','year','month','day','hour','snapshot'];
 
 PywbPeriod.prototype.getChildById = function(id) {
     return this.children[this.childrenIds[id]];
@@ -107,12 +107,17 @@ PywbPeriod.prototype.addSnapshot = function(snap, noCounting) {
 
     this.snapshotCount++;
     let parent = this.parent;
+    let grandChild = this;
+    let grandParent = parent.parent;
     while (parent) {
         parent.snapshotCount++;
-        if (parent.parent) { // grandparent
-            parent.parent.maxGrandchildSnapshotCount = Math.max(parent.parent.maxGrandchildSnapshotCount, this.snapshotCount);
+
+        if (grandParent) { // grandparent
+            grandParent.maxGrandchildSnapshotCount = Math.max(grandParent.maxGrandchildSnapshotCount, grandChild.snapshotCount);
         }
+        grandChild = parent;
         parent = parent.parent;
+        grandParent = grandParent.parent;
     }
 };
 
@@ -126,5 +131,8 @@ PywbPeriod.prototype.getFullId = function() {
     }
 }
 PywbPeriod.prototype.getTypeText = function() {
-    return PywbPeriod.TypeString[this.id];
+    return PywbPeriod.TypeString[this.type];
+}
+PywbPeriod.GetTypeText = function(type) {
+    return PywbPeriod.TypeString[type] ? PywbPeriod.TypeString[type] : '';
 }
