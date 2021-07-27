@@ -1,11 +1,4 @@
 <script type="text/x-template" id="timeline">
-    <div class="timeline-wrap">
-        <div class="nav">Showing:
-            <template v-if="period.getParents()">
-                <span v-for="parent in period.getParents()"><a class="goto" @click="changePeriod(parent)">{{parent.getReadableId()}}</a> &gt; </span>
-            </template>
-            <span>{{period.getReadableId()}}</span>
-        </div>
         <div class="timeline">
             <div class="scroll" ref="periodScroll">
                 <div class="arrow previous" @click="scrollPrev" @dblclick.stop.prevent>&#x25C0;</div>
@@ -25,17 +18,11 @@
                 <div class="arrow next" @click="scrollNext" @dblclick.stop.prevent>&#x25B6;</div>
             </div>
         </div>
-    </div>
 </script>
 
 <script type="text/javascript">
     Pywb.vue.components['timeline'] = {
-        props: {
-            period: {
-                required: false,
-                default: {}
-            }
-        },
+        props: ['period'],
         template: '#timeline',
         data: function() {
             return {
@@ -98,22 +85,12 @@
 
 
 <style>
-    .timeline-wrap {
-        padding: 0 20px;
-    }
-    .nav {
-        font-size: 18px;
-    }
-    .nav .goto {
-        margin-right: 5px;
-        text-decoration: underline;
-        cursor: pointer;
-    }
     .timeline {
         position: relative;
         display: flex;
         width: 60%; /* TODO: change width to something real (responsive?) */
         height: 80px;
+        margin: 0 20px;
         justify-content: center;
     }
 

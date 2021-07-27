@@ -22,11 +22,22 @@
 </head>
 <body>
 <?php echo file_get_contents('./components/timeline.html'); ?>
+<?php echo file_get_contents('./components/summary.html'); ?>
 
 <div id="app">
-    <select v-model="url">
-        <option>url</option>
-        <option v-for="sample in sampleData" :value="sample">{{sample}}</option></select> <input type="button" value="Go" @click="loadUrl"/>
+    <div class="nav">
+        <div class="url"><select v-model="url">
+                <option>url</option>
+                <option v-for="sample in sampleData" :value="sample">{{sample}}</option>
+            </select>
+            <input type="button" value="Go" @click="loadUrl"/>
+        </div>
+        <timeline-summary
+                v-if="currentPeriod"
+                :period="currentPeriod"
+                @goto-period="gotoPeriod"
+        ></timeline-summary>
+    </div>
     <timeline
             v-if="currentPeriod"
             :period="currentPeriod"
@@ -81,6 +92,9 @@
     .iframe iframe {
         width: 100%;
         height: 100%;
+    }
+    .nav .summary, .nav .url {
+        display: inline-block;
     }
 </style>
 </body>

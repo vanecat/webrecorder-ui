@@ -1,0 +1,46 @@
+<script type="text/x-template" id="timeline-summary">
+    <div class="summary">Showing:
+        <template v-if="parents">
+            <span v-for="parent in parents" class="item"><a class="goto" @click="changePeriod(parent)">{{parent.getReadableId()}}</a> &gt;</span>
+        </template>
+        <span class="item">{{period.getReadableId()}}</span>
+    </div>
+</script>
+
+<script type="text/javascript">
+    Pywb.vue.components['timeline-summary'] = {
+        props: ['period'],
+        template: '#timeline-summary',
+        computed: {
+            parents: function() {
+                return this.period.getParents();
+            }
+        },
+        methods: {
+            changePeriod(period) {
+                if (period.snapshotCount) {
+                    if (period.snapshot) {
+                        this.$emit('goto-snapshot', period.snapshot);
+                    } else {
+                        this.$emit('goto-period', period);
+                    }
+                }
+            },
+        }
+    };
+</script>
+
+<style>
+    .summary {
+        font-size: 18px;
+    }
+    .summary .goto {
+         margin-right: 5px;
+         text-decoration: underline;
+         cursor: pointer;
+     }
+
+    .summary .item {
+        margin: 0 10px;
+    }
+</style>
