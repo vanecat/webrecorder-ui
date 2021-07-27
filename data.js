@@ -1,6 +1,6 @@
 if (!window.Pywb) window.Pywb = {};
 Pywb.makeData = (rawSnaps) => {
-    const all = new PywbPeriod({type: 'all'});
+    const all = new PywbPeriod({type: PywbPeriod.Type.all, id: 'all'});
 
     rawSnaps.forEach(rawSnap => {
         const snap = new PywbSnapshot(rawSnap);
@@ -10,7 +10,7 @@ Pywb.makeData = (rawSnaps) => {
             all.addChild(yearPeriod);
         }
         if (!(monthPeriod = yearPeriod.getChildById(snap.month))) {
-            monthPeriod = new PywbPeriod({type: PywbPeriod.Type.month, id: snap.month});
+            monthPeriod = new PywbPeriod({type: PywbPeriod.Type.month, id: snap.month, parent: yearPeriod});
             yearPeriod.addChild(monthPeriod);
         }
 
