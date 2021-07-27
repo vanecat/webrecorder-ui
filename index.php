@@ -9,8 +9,7 @@
         const Pywb = {
             data: {},
             vue: {app:{}, components:{} },
-            init: (data) => {
-                Pywb.data = Pywb.makeData(data);
+            init: () => {
                 Object.keys(Pywb.vue.components).forEach(function(componentId) {
                     Vue.component(componentId, Pywb.vue.components[componentId]);
                 });
@@ -25,6 +24,9 @@
 <?php echo file_get_contents('./components/timeline.html'); ?>
 
 <div id="app">
+    <select v-model="url">
+        <option>url</option>
+        <option v-for="sample in sampleData" :value="sample">{{sample}}</option></select> <input type="button" value="Go" @click="loadUrl"/>
     <timeline
             v-if="currentPeriod"
             :period="currentPeriod"
@@ -40,20 +42,30 @@
     Pywb.vue.app = {
         el: '#app',
         data: {
+            url: '',
             snapshots: [],
             currentPeriod: null,
             currentSnapshot: null,
-            msgs: []
+            msgs: [],
+            sampleData: ['bbc-com', 'uk-gov']
         },
         mounted: function() {
-            try {
-                this.snapshots = Pywb.data.linear;
-                this.currentPeriod = Pywb.data.groupped;
-            } catch(e) {
-                this.msgs.push(e.message);
-            }
         },
         methods: {
+            loadUrl() {
+                // https://www.webarchive.org.uk/wayback/en/archive/cdx?
+                const url = `/sample-data/${this.url}.json?output=json&url=${encodeURIComponent(this.url)}`;
+                fetch(url, {mode: 'cors'}).then(r => r.json()).then(data => this.initData(data));
+            },
+            initData(data) {
+                try {
+                    const {groupped, linear} = Pywb.makeData(data);
+                    this.snapshots = linear;
+                    this.currentPeriod = groupped;
+                } catch(e) {
+                    this.msgs.push(e.message);
+                }
+            },
             gotoPeriod: function(newPeriod) {
                 this.currentPeriod = newPeriod;
             },
@@ -62,7 +74,7 @@
             }
         }
     };
-    fetch('/data-sample-medium.json').then(r => r.json()).then(data => Pywb.init(data));
+    Pywb.init();
 </script>
 
 <style>
