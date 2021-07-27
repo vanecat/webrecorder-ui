@@ -10,23 +10,32 @@
 <body>
 <div id="app">
     <div v-for="msg in msgs">{{msg}}</div>
-    {{snaps.length}}
-    <div v-for="s in snaps">{{s.year}}-{{s.month}}-{{s.day}} {{s.hour}}:{{s.minute}}</div>
-    <div v-for="p in periods">{{p.type}}: {{p.id}}
-        <div v-for="p1 in p.children">&nbsp;&nbsp;
-            {{p1.type}}: {{p1.id}}
-            <div v-for="p2 in p1.children">&nbsp;&nbsp;&nbsp;&nbsp;
-                {{p2.type}}: {{p2.id}}
-                <div v-for="p3 in p2.children">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {{p3.type}}: {{p3.id}}
-                    <div v-for="s in p3.snapshots">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        {{s.id}}
+    <div @click="showSnapshots = !showSnapshots">
+        <span v-if="showSnapshots">+</span><span v-if="!showSnapshots">-</span>
+        <strong>{{snaps.length}} snapshots</strong>
+    </div>
+    <div v-if="showSnapshots">
+        <div v-for="s in snaps">{{s.year}}-{{s.month}}-{{s.day}} {{s.hour}}:{{s.minute}}</div>
+    </div>
+    <div v-if="timeline">
+        <div><strong>timeline ({{timeline.snapshotCount}} snaps in {{timeline.id}} {{timeline.getTypeText()}}, max {{getGrandchildTypeText(timeline)}}: {{timeline.maxGrandchildSnapshotCount}})</strong></div>
+        <div v-for="p in timeline.children"><strong>{{p.id}}</strong> ({{p.snapshotCount}} in {{p.getTypeText()}}, max {{getGrandchildTypeText(p)}}: {{p.maxGrandchildSnapshotCount}}))
+            <div v-for="p1 in p.children">&nbsp;&nbsp;
+                <strong>{{monthLabels[p1.id]}}</strong> ({{p1.snapshotCount}} in {{p1.getTypeText()}}, max {{getGrandchildTypeText(p1)}}: {{p1.maxGrandchildSnapshotCount}})))
+                <div v-for="p2 in p1.children">&nbsp;&nbsp;&nbsp;&nbsp;
+                    <strong>{{p2.id}}th</strong> ({{p2.snapshotCount}} in {{p2.getTypeText()}}, max {{getGrandchildTypeText(p2)}})
+                    <div v-for="p3 in p2.children">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <strong>{{p3.id}}:00</strong> ({{p3.snapshotCount}} in {{p3.getTypeText()}})
+                        <div v-for="s in p3.snapshots">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            - {{s.id}}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
+
 </div>
 <script>
     function init(data) {
@@ -35,23 +44,26 @@
             data: {
                 msgs: [],
                 snaps: [],
-                periods: [],
+                showSnapshots: false,
+                timeline: null,
                 monthLabels: {1:'Jan', 2:'Feb',3:'Mar',4:'Apr',5:'May',6:'Jun',7:'Jul',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'}
             },
             mounted() {
                 try {
-                    const all = Pywb.makeData(data);
-                    this.snaps = all.snapshots;
-                    this.periods = all.children;
+                    this.timeline = Pywb.makeData(data);
+                    this.snaps = this.timeline.snapshots;
                 } catch(e) {
                     this.msgs.push(e.message);
                 }
             },
             methods: {
+                getGrandchildTypeText(period) {
+                    return PywbPeriod.GetTypeText(period.type+2);
+                }
             }
         });
     }
-    fetch('/data-sample.json').then(r => r.json()).then(data => init(data));
+    fetch('/data-sample-medium.json').then(r => r.json()).then(data => init(data));
 </script>
 </body>
 </html>
