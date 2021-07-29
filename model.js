@@ -121,7 +121,6 @@ PywbPeriod.prototype.fillEmptyPeriods = function() {
     for (let newId = idRange[0]; newId <= idRange[1]; newId++) {
 
         if (i < childrenIds.length) {
-            if (this.type === 0) console.log(childrenIds[i]);
             if (childrenIds[i] === newId) {
                 // no change, skip, item already in place
                 i++;
