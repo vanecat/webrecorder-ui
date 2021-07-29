@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fill in Empty periods</title>
+    <script src="../model.js"></script>
+</head>
+<body>
+<div></div>
+<script>
+    function print(s) {
+        if (!print.el) {
+            print.el = document.querySelector('div');
+        }
+        const el = document.createElement('div');
+        el.innerText = typeof s === 'object' ? JSON.stringify(s) : s;
+        print.el.appendChild(el);
+    }
+
+    const all = new PywbPeriod({id: 'all', type: PywbPeriod.Type.all});
+    const years = [2010,2014,2015,2020,2021];
+    years.forEach(y => {
+        const year = new PywbPeriod({id: y, type: PywbPeriod.Type.year});
+        all.addChild(year);
+    });
+
+    print(all.childrenIds);
+    all.fillEmptyPeriods();
+    print(all.childrenIds);
+</script>
+</body>
+</html>
