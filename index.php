@@ -27,11 +27,13 @@
 <div id="app">
     <div class="logo"><img src="/static/webarch-logo.png" /></div>
     <div class="nav">
-        <div class="url"><select v-model="url">
+        <div class="url">
+            <select v-model="url">
                 <option>url</option>
                 <option v-for="sample in sampleData" :value="sample">{{sample}}</option>
             </select>
             <input type="button" value="Go" @click="loadUrl"/>
+            <span @click="showFullView = !showFullView">show details/full view</span>
         </div>
         <timeline-summary
                 v-if="currentPeriod"
@@ -46,6 +48,15 @@
             @goto-period="gotoPeriod"
             @goto-snapshot="gotoSnapshot"
     ></timeline>
+    <div class="full-view" v-if="showFullView && currentPeriod">
+        Full View
+        <timeline
+                v-for="period in currentPeriod.children"
+                :period="period"
+                @goto-period="gotoPeriod"
+                @goto-snapshot="gotoSnapshot"
+        ></timeline>
+    </div>
     <div class="iframe" v-if="currentSnapshot">
         <iframe :src="currentSnapshot.load_url"></iframe>
     </div>
@@ -59,7 +70,8 @@
             currentPeriod: null,
             currentSnapshot: null,
             msgs: [],
-            sampleData: ['bbc-com', 'uk-gov']
+            sampleData: ['bbc-com', 'uk-gov'],
+            showFullView: false
         },
         mounted: function() {
         },
@@ -104,6 +116,13 @@
     }
     .nav .summary, .nav .url {
         display: inline-block;
+    }
+    .full-view {
+        position: absolute;
+        top: 100px;
+        left: 0;
+        height: 80vh;
+        width: 100%;
     }
 </style>
 </body>
