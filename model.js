@@ -124,17 +124,14 @@ PywbPeriod.prototype.fillEmptyPeriods = function() {
             if (this.type === 0) console.log(childrenIds[i]);
             if (childrenIds[i] === newId) {
                 // no change, skip, item already in place
-                //console.log('match', newId, childrenIds[i], i);
                 i++;
             } else {
                 const empty = new PywbPeriod({type: this.type + 1, id: newId})
                 if (newId < childrenIds[i]) {
-                    //console.log('insert before', newId, childrenIds[i], i);
                     // insert new before existing
                     this.children.splice(i, 0, empty);
                 } else if (newId > childrenIds[i]) {
                     // insert new AFTER existing
-                    //console.log('insert after', newId, childrenIds[i], i);
                     this.children.splice(i + 1, 0, empty);
                     i++;
                 }
@@ -148,7 +145,6 @@ PywbPeriod.prototype.fillEmptyPeriods = function() {
     for(i=0;i<this.children.length;i++) {
         this.childrenIds[this.children[i].id] = i;
     }
-    if (this.type === 0)  console.log(this.children, this.childrenIds);
 }
 
 PywbPeriod.prototype.parents = null;
