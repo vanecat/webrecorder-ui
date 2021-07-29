@@ -96,6 +96,61 @@ PywbPeriod.prototype.addChild = function(period) {
     return true;
 };
 
+PywbPeriod.prototype.fillEmptyPeriods = function() {
+    let idRange = [];
+    switch (this.type) {
+        case PywbPeriod.Type.all:
+            // year range: first to last year available
+            idRange = [this.children[0].id, this.children[this.children.length-1].id]; break;
+        case PywbPeriod.Type.year:
+            // month is simple: 1 to 12
+            idRange = [1,12]; break;
+        case PywbPeriod.Type.month:
+            // days in month: 1 to last day in month
+            const y = this.parent.id; const m = this.id;
+            const lastDateInMonth = (new Date((new Date(y, m, 1)).getTime() - 1000)).getDate(); // 1 sec earlier
+            idRange = [1, lastDateInMonth]; break;
+        case PywbPeriod.Type.day:
+            // hours: 0 to 23
+            idRange = [0,23]; break;
+    }
+
+
+    let i = 0;
+    const childrenIds = Object.keys(this.childrenIds).map(i => parseInt(i));
+    for (let newId = idRange[0]; newId <= idRange[1]; newId++) {
+
+        if (i < childrenIds.length) {
+            if (this.type === 0) console.log(childrenIds[i]);
+            if (childrenIds[i] === newId) {
+                // no change, skip, item already in place
+                //console.log('match', newId, childrenIds[i], i);
+                i++;
+            } else {
+                const empty = new PywbPeriod({type: this.type + 1, id: newId})
+                if (newId < childrenIds[i]) {
+                    //console.log('insert before', newId, childrenIds[i], i);
+                    // insert new before existing
+                    this.children.splice(i, 0, empty);
+                } else if (newId > childrenIds[i]) {
+                    // insert new AFTER existing
+                    //console.log('insert after', newId, childrenIds[i], i);
+                    this.children.splice(i + 1, 0, empty);
+                    i++;
+                }
+            }
+        } else {
+            const empty = new PywbPeriod({type: this.type + 1, id: newId});
+            this.children.push(empty);
+        }
+    }
+
+    for(i=0;i<this.children.length;i++) {
+        this.childrenIds[this.children[i].id] = i;
+    }
+    if (this.type === 0)  console.log(this.children, this.childrenIds);
+}
+
 PywbPeriod.prototype.parents = null;
 PywbPeriod.prototype.getParents = function() {
     if (!this.parents) {

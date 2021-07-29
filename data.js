@@ -28,7 +28,14 @@ Pywb.makeData = (rawSnaps) => {
         }
         single.setSnapshot(snap);
         linear.push(snap);
+
+        if (lastYear && lastYear !== year) { lastYear.fillEmptyPeriods(); }
+        if (lastMonth && lastMonth !== month) { lastMonth.fillEmptyPeriods(); }
+        if (lastDay && lastDay !== day) { lastDay.fillEmptyPeriods(); }
+        if (lastHour && lastHour !== hour) { lastHour.fillEmptyPeriods(); }
+        lastYear = year; lastMonth = month; lastDay = day; lastHour = hour;
     });
+    all.fillEmptyPeriods();
 
     return {groupped: all, linear};
 };
