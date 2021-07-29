@@ -104,7 +104,7 @@
 <style>
     #app {
         border-bottom: 1px solid lightcoral;
-        height: 100px;
+        height: 110px;
     }
     .iframe iframe {
         width: 100%;
