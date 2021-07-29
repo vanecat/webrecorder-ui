@@ -74,6 +74,10 @@
             showFullView: false
         },
         mounted: function() {
+            // DEVELOPMENT ONLY (TODO: remove when deploying app)
+            // make initial sample data appear on "mounted" (faster for development)
+            this.url = this.sampleData[0];
+            this.loadUrl();
         },
         methods: {
             loadUrl() {
