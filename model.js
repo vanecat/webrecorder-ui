@@ -40,11 +40,6 @@ function PywbPeriod(init) {
     this.childrenIds = {}; // allow for query by ID
     this.children = []; // allow for sequentiality / order
 
-    this.parent = init.parent;
-    if (this.parent) {
-        this.parent.addChild(this);
-    }
-
     this.maxGrandchildSnapshotCount = 0;
     this.snapshotCount = 0;
 
@@ -90,10 +85,12 @@ PywbPeriod.prototype.getNextChild = function(child) {
     return this.children[childIndex+1];
 }
 
+PywbPeriod.prototype.parent = null;
 PywbPeriod.prototype.addChild = function(period) {
     if (this.getChildById(period.id)) {
         return false;
     }
+    period.parent = this;
     this.childrenIds[period.id] = this.children.length;
     this.children.push(period);
     return true;
@@ -111,13 +108,6 @@ PywbPeriod.prototype.getParents = function() {
         this.parents = this.parents.reverse();
     }
     return this.parents;
-}
-PywbPeriod.prototype.addEmptySiblings = function(siblings) {
-    const lastDateInMonth = (new Date((new Date(y, m, 1)).getTime() - 1000)).getDate(); // 1 sec earlier
-    for (let d = 1; d <= lastDateInMonth; d++) {}
-    const firstYear = yearsIds[0];
-    const lastYear = yearsIds[yearsIds.length-1];
-    for(let h=0; h<24; h++) {}
 }
 
 PywbPeriod.prototype.snapshot = null;

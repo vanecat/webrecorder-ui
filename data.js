@@ -2,27 +2,31 @@ if (!window.Pywb) window.Pywb = {};
 Pywb.makeData = (rawSnaps) => {
     const all = new PywbPeriod({type: PywbPeriod.Type.all, id: 'all'});
     const linear = [];
+    let lastYear, lastMonth, lastDay, lastHour;
     rawSnaps.forEach(rawSnap => {
         const snap = new PywbSnapshot(rawSnap);
-        let yearPeriod, monthPeriod, dayPeriod, hourPeriod, snapPeriod;
-        if (!(yearPeriod = all.getChildById(snap.year))) {
-            yearPeriod = new PywbPeriod({type: PywbPeriod.Type.year, id: snap.year, parent: all});
+        let year, month, day, hour, single;
+        if (!(year = all.getChildById(snap.year))) {
+            year = new PywbPeriod({type: PywbPeriod.Type.year, id: snap.year});
+            all.addChild(year);
         }
-        if (!(monthPeriod = yearPeriod.getChildById(snap.month))) {
-            monthPeriod = new PywbPeriod({type: PywbPeriod.Type.month, id: snap.month, parent: yearPeriod});
+        if (!(month = year.getChildById(snap.month))) {
+            month = new PywbPeriod({type: PywbPeriod.Type.month, id: snap.month});
+            year.addChild(month);
         }
-
-        if (!(dayPeriod = monthPeriod.getChildById(snap.day))) {
-            dayPeriod = new PywbPeriod({type: PywbPeriod.Type.day, id: snap.day, parent: monthPeriod});
+        if (!(day = month.getChildById(snap.day))) {
+            day = new PywbPeriod({type: PywbPeriod.Type.day, id: snap.day});
+            month.addChild(day);
         }
-        if (!(hourPeriod = dayPeriod.getChildById(snap.hour))) {
-            hourPeriod = new PywbPeriod({type: PywbPeriod.Type.hour, id: snap.hour, parent: dayPeriod});
+        if (!(hour = day.getChildById(snap.hour))) {
+            hour = new PywbPeriod({type: PywbPeriod.Type.hour, id: snap.hour});
+            day.addChild(hour);
         }
-        if (!(snapPeriod = hourPeriod.getChildById(snap.id))) {
-            snapPeriod = new PywbPeriod({type: PywbPeriod.Type.snapshot, id: snap.id, parent: hourPeriod});
+        if (!(single = hour.getChildById(snap.id))) {
+            single = new PywbPeriod({type: PywbPeriod.Type.snapshot, id: snap.id});
+            hour.addChild(single);
         }
-        snapPeriod.setSnapshot(snap);
-
+        single.setSnapshot(snap);
         linear.push(snap);
     });
 
