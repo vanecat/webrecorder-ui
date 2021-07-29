@@ -115,35 +115,35 @@ PywbPeriod.prototype.fillEmptyPeriods = function() {
             idRange = [0,23]; break;
     }
 
-
     let i = 0;
-    const childrenIds = Object.keys(this.childrenIds).map(i => parseInt(i));
     for (let newId = idRange[0]; newId <= idRange[1]; newId++) {
 
-        if (i < childrenIds.length) {
-            if (childrenIds[i] === newId) {
-                // no change, skip, item already in place
-                i++;
-            } else {
+        if (i < this.children.length) {
+            // if existing and new id match, skip, item already in place
+            // else
+            if (this.children[i].id !== newId) {
                 const empty = new PywbPeriod({type: this.type + 1, id: newId})
-                if (newId < childrenIds[i]) {
+                if (newId < this.children[i].id) {
                     // insert new before existing
                     this.children.splice(i, 0, empty);
-                } else if (newId > childrenIds[i]) {
-                    // insert new AFTER existing
-                    this.children.splice(i + 1, 0, empty);
-                    i++;
+                } else {
+                    // insert new after existing
+                    this.children.splice(i+1, 0, empty);
                 }
             }
+            i++;
         } else {
             const empty = new PywbPeriod({type: this.type + 1, id: newId});
             this.children.push(empty);
         }
     }
 
-    for(i=0;i<this.children.length;i++) {
+    // re-calculate indexes
+    for(let i=0;i<this.children.length;i++) {
         this.childrenIds[this.children[i].id] = i;
     }
+
+    return idRange;
 }
 
 PywbPeriod.prototype.parents = null;

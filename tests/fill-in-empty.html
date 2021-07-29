@@ -13,20 +13,49 @@
             print.el = document.querySelector('div');
         }
         const el = document.createElement('div');
-        el.innerText = typeof s === 'object' ? JSON.stringify(s) : s;
+        el.innerHTML = typeof s === 'object' ? JSON.stringify(s) : s;
         print.el.appendChild(el);
     }
 
-    const all = new PywbPeriod({id: 'all', type: PywbPeriod.Type.all});
-    const years = [2010,2014,2015,2020,2021];
-    years.forEach(y => {
-        const year = new PywbPeriod({id: y, type: PywbPeriod.Type.year});
-        all.addChild(year);
-    });
 
-    print(all.childrenIds);
-    all.fillEmptyPeriods();
-    print(all.childrenIds);
+    test(PywbPeriod.Type.all, ['all'], [2010,2014,2015,2020,2021]);
+    test(PywbPeriod.Type.year, ['all', 2014], [1,3,5,6,8]);
+    test(PywbPeriod.Type.year, ['all', 2014], [3,5,6,8]);
+    test(PywbPeriod.Type.year, ['all', 2014], [1,12]);
+    test(PywbPeriod.Type.month, ['all', 2014, 2], [3,13,14,23]);
+    test(PywbPeriod.Type.day, ['all', 2014, 3], [1,20, 30]);
+    test(PywbPeriod.Type.day, ['all', 2014, 3], [20,21]);
+    test(PywbPeriod.Type.hour, ['all', 2014, 3, 3], [1,18]);
+
+    function test(type, parentIds, childrenIds) {
+        let parent;
+        parentIds.forEach((parentId,i) => {
+            const child = new PywbPeriod({id: parentId, type: i});
+            if (parent) {
+                parent.addChild(child);
+            }
+            parent = child;
+        })
+
+        print(`<strong>${PywbPeriod.GetTypeLabel(parent.type+1)}s in ${parent.getReadableId()}</strong>`);
+        childrenIds.forEach(id => {
+            const child = new PywbPeriod({id: id, type: parent.type+1});
+            parent.addChild(child);
+        });
+
+        const before = parent.children.map(c => c.id).join(',');
+        const idRange = parent.fillEmptyPeriods();
+        const after = parent.children.map(c => c.id).join(',');
+
+        const controlIds = [];
+        for(let i = idRange[0]; i<=idRange[1]; i++) {
+            controlIds.push(i);
+        }
+        const control = controlIds.join(',');
+
+        print(`${before} <br/> ${after} <br/> <span style="color: ${after === control ?'green':'red'}">${after === control ? 'ok':'ERROR'}</span>`);
+    }
+
 </script>
 </body>
 </html>
