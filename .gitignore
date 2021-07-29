@@ -1,3 +1,5 @@
 vue*.js
 .idea/
 sample-data/
+static/
+_notes/
