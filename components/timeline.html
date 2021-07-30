@@ -2,10 +2,10 @@
     <div class="timeline">
         <div class="id">
             <template v-if="parents">
-                <span v-for="parent in parents" class="item" v-if="parent.type"><a class="goto" @click="changePeriod(parent)">{{parent.getReadableId(true)}}</a>&nbsp;</span>
+                <span v-for="parent in parents" :key="parent.id" class="item" v-if="parent.type"><a class="goto" @click="changePeriod(parent)">{{parent.getReadableId(true)}}</a>&nbsp;</span>
             </template>{{period.getReadableId(true)}}
         </div>
-        <div class="arrow previous" @click="scrollPrev" @dblclick.stop.prevent>&#x25C0;</div>
+        <div class="arrow previous" @click="scrollPrev" @dblclick.stop.prevent><span v-if="!isScrollZero">&#x25C0;</span></div>
         <div class="scroll" ref="periodScroll">
             <div class="scroll-inner" ref="periods">
                 <div v-for="subPeriod in period.children"
@@ -27,7 +27,7 @@
                 </div>
             </div>
         </div>
-        <div class="arrow next" @click="scrollNext" @dblclick.stop.prevent>&#x25B6;</div>
+        <div class="arrow next" @click="scrollNext" @dblclick.stop.prevent><span v-if="!isScrollMax">&#x25B6;</span></div>
     </div>
 </script>
 
@@ -44,11 +44,15 @@
                     [PywbPeriod.Type.hour]: 100, // hour box in day
                     [PywbPeriod.Type.snapshot]: 10 // snapshot box in hour/day
                 },
-                highlightPeriod: null
+                highlightPeriod: null,
+                isScrollZero: true,
+                isScrollMax: false,
             };
         },
         mounted: function() {
             this.$refs.periodScroll.addEventListener('scroll', this.saveScroll);
+            this.$refs.periods._computedStyle = window.getComputedStyle(this.$refs.periods);
+            this.$refs.periodScroll._computedStyle = window.getComputedStyle(this.$refs.periodScroll);
             this.$watch('period', this.onPeriodChanged);
             this.adjustWidthAndScroll();
         },
@@ -66,6 +70,15 @@
         methods: {
             saveScroll() {
                 this.period.scroll = this.$refs.periodScroll.scrollLeft;
+                if (this.period.scroll) {
+                    // more than 0
+                    const maxScroll = parseInt(this.$refs.periods._computedStyle.width) - parseInt(this.$refs.periodScroll._computedStyle.width);
+                    this.isScrollZero = false;
+                    this.isScrollMax = Math.abs(maxScroll - this.period.scroll) < 5;
+                } else {
+                    this.isScrollZero = true;
+                    this.isScrollMax = false;
+                }
             },
             restoreScroll() {
                 this.$refs.periodScroll.scrollLeft = this.period.scroll;
@@ -137,6 +150,7 @@
         /*z-index: 10;*/
         /*top: 0;*/
         display: inline-block;
+        width: 20px;
         font-size: 20px; /* font-size = width of arrow, as it UTF char */
         line-height: 80px;
         vertical-align: top;
