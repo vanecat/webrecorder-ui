@@ -1,6 +1,10 @@
 <script type="text/x-template" id="timeline">
     <div class="timeline">
-        <div class="id">{{period.id}}</div>
+        <div class="id">
+            <template v-if="parents">
+                <span v-for="parent in parents" class="item" v-if="parent.type"><a class="goto" @click="changePeriod(parent)">{{parent.getReadableId(true)}}</a>&nbsp;</span>
+            </template>{{period.getReadableId(true)}}
+        </div>
         <div class="arrow previous" @click="scrollPrev" @dblclick.stop.prevent>&#x25C0;</div>
         <div class="scroll" ref="periodScroll">
             <div class="scroll-inner" ref="periods">
@@ -51,6 +55,9 @@
         computed: {
             subPeriodBoxWidth: function() {
                 return this.subPeriodBoxWidths[this.period.type+1]; // the type of the period children
+            },
+            parents() {
+                return this.period.getParents();
             }
         },
         updated() {
