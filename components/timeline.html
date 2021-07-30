@@ -12,7 +12,7 @@
                      :key="subPeriod.id"
                      class="period"
                      :class="{empty: !subPeriod.snapshotCount, highlight: highlightPeriod === subPeriod}"
-                     :style="{width: subPeriodBoxWidth+'px'}"
+                     :style="{width: (subPeriod.children.length ? subPeriodBoxWidth:emptySubPeriodBoxWidth)+'px'}"
                      v-on:click="changePeriod(subPeriod)">
                     <div class="histo">
                         <div class="count" v-if="!subPeriod.snapshot"><span class="count-inner">{{subPeriod.snapshotCount}}</span></div>
@@ -42,7 +42,13 @@
                     [PywbPeriod.Type.month]: 80, // month box in year
                     [PywbPeriod.Type.day]: 20, // days box in month
                     [PywbPeriod.Type.hour]: 100, // hour box in day
-                    [PywbPeriod.Type.snapshot]: 10 // snapshot box in hour/day
+                    [PywbPeriod.Type.snapshot]: 20 // snapshot box in hour/day
+                },
+                emptySubPeriodBoxWidths: {// in pixels
+                    [PywbPeriod.Type.year]: 40, // year box
+                    [PywbPeriod.Type.month]: 40, // month box in year
+                    [PywbPeriod.Type.day]: 20, // days box in month
+                    [PywbPeriod.Type.hour]: 40, // hour box in day
                 },
                 highlightPeriod: null,
                 isScrollZero: true,
@@ -59,6 +65,9 @@
         computed: {
             subPeriodBoxWidth: function() {
                 return this.subPeriodBoxWidths[this.period.type+1]; // the type of the period children
+            },
+            emptySubPeriodBoxWidth: function() {
+                return this.emptySubPeriodBoxWidths[this.period.type+1]; // the type of the period children
             },
             parents() {
                 return this.period.getParents();
