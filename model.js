@@ -117,6 +117,9 @@ PywbPeriod.prototype.getChildrenRange = function() {
 }
 PywbPeriod.prototype.fillEmptyPeriods = function() {
     const idRange = this.getChildrenRange();
+    if (!idRange) {
+        return;
+    }
     let i = 0;
     for (let newId = idRange[0]; newId <= idRange[1]; newId++) {
 
