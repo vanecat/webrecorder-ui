@@ -33,7 +33,6 @@
                 <option v-for="sample in sampleData" :value="sample">{{sample}}</option>
             </select>
             <input type="button" value="Go" @click="loadUrl"/>
-            <span @click="showFullView = !showFullView">show details/full view</span>
         </div>
         <timeline-summary
                 v-if="currentPeriod"
@@ -41,6 +40,7 @@
                 :current-snapshot="currentSnapshot"
                 @goto-period="gotoPeriod"
         ></timeline-summary>
+        <span @click="showFullView = !showFullView">+/-</span>
     </div>
     <timeline
             v-if="currentPeriod"
