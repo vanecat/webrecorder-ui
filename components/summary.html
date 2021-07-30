@@ -2,11 +2,14 @@
     <div class="summary">
         <template v-if="parents">
             <span v-for="parent in parents" :key="parent.id" class="item">
-                <a class="goto" @click="changePeriod(parent)">{{parent.getReadableId(true)}}</a>
-                <span class="count">{{parent.snapshotCount}}</span> &gt;
+                <span class="goto" @click="changePeriod(parent)">{{parent.getReadableId(true)}}</span>
+                <span class="count">{{parent.snapshotCount}}</span>
             </span>
         </template>
-        <span class="item">{{period.getReadableId(true)}} <span class="count">{{period.snapshotCount}}</span> <span v-if="currentSnapshot">&gt;</span></span>
+        <span class="item">
+            <span class="current">{{period.getReadableId(true)}}</span>
+            <span class="count">{{period.snapshotCount}}</span>
+        </span>
         <span class="item" v-if="currentSnapshot">{{currentSnapshot.getTimeFormatted()}}</span>
     </div>
 </script>
@@ -42,23 +45,39 @@
 </script>
 
 <style>
-    .summary {
-        font-size: 18px;
-    }
     .summary .count {
-        display: inline;
+        position: relative;
+        display: inline-block;
         width: auto;
-        background-color: rgb(200,200,200);
+        top: -5px;
         padding: 1px;
         border-radius: 5px;
+        background-color: rgb(200,200,200);
+        font-size: 14px;
     }
-    .summary .goto {
-         margin-right: 5px;
-         text-decoration: underline;
-         cursor: pointer;
-     }
 
     .summary .item {
-        margin: 0 5px;
+        font-size: 20px;
+        display: block;
+        margin: 0 2px 0 0;
     }
+    .summary .item .goto {
+        margin: 1px;
+        cursor: pointer;
+     }
+    .summary .item .goto:before {
+        content: "\2196";
+    }
+    .summary .item .goto:hover {
+        border-radius: 5px;
+        background-color: #a6cdf5;
+    }
+    .summary .item .goto:hover {
+        border-radius: 5px;
+        background-color: #a6cdf5;
+    }
+    .summary .item .current {
+        font-size: 24px;
+    }
+
 </style>
