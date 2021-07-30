@@ -1,11 +1,6 @@
 <script type="text/x-template" id="timeline">
     <div class="timeline">
-        <div class="id">
-            <template v-if="parents">
-                <span v-for="parent in parents" :key="parent.id" class="item" v-if="parent.type"><a class="goto" @click="changePeriod(parent)">{{parent.getReadableId(true)}}</a>&nbsp;</span>
-            </template>{{period.getReadableId(true)}}
-        </div>
-        <div class="arrow previous" @click="scrollPrev" @dblclick.stop.prevent><span v-if="!isScrollZero">&#x25C0;</span></div>
+        <div class="arrow previous" :class="{disabled: isScrollZero}" @click="scrollPrev" @dblclick.stop.prevent>&#x25C0;</div>
         <div class="scroll" ref="periodScroll">
             <div class="scroll-inner" ref="periods">
                 <div v-for="subPeriod in period.children"
@@ -27,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="arrow next" @click="scrollNext" @dblclick.stop.prevent><span v-if="!isScrollMax">&#x25B6;</span></div>
+        <div class="arrow next" :class="{disabled: isScrollMax}" @click="scrollNext" @dblclick.stop.prevent>&#x25B6;</div>
     </div>
 </script>
 
@@ -146,7 +141,7 @@
         display: flex;
         width: 60%; /* TODO: change width to something real (responsive?) */
         height: 80px;
-        margin: 0 20px;
+        margin: 5px;
         justify-content: center;
     }
 
@@ -155,9 +150,6 @@
         font-size: 30px;
     }
     .timeline .arrow {
-        /*position: absolute;*/
-        /*z-index: 10;*/
-        /*top: 0;*/
         display: inline-block;
         width: 20px;
         font-size: 20px; /* font-size = width of arrow, as it UTF char */
@@ -166,10 +158,13 @@
         cursor: pointer;
     }
     .timeline .arrow.previous {
-        /*left: -20px;*/
     }
     .timeline .arrow.next {
-        /*right: -20px;*/
+    }
+    .timeline .arrow.disabled, .timeline .arrow.disabled:hover {
+        color: lightgray;
+        background-color: transparent;
+        cursor: not-allowed;
     }
     .timeline .arrow:hover {
         background-color: antiquewhite;
