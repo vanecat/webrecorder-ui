@@ -36,7 +36,7 @@ Pywb.makeData = (rawSnaps) => {
         lastYear = year; lastMonth = month; lastDay = day; lastHour = hour;
     });
     // fill in the empty periods of the last period
-    if (lastYear) { console.log(lastYear.id); lastYear.fillEmptyPeriods(); }
+    if (lastYear) { lastYear.fillEmptyPeriods(); }
     if (lastMonth) { lastMonth.fillEmptyPeriods(); }
     if (lastDay) { lastDay.fillEmptyPeriods(); }
     if (lastHour) { lastHour.fillEmptyPeriods(); }
