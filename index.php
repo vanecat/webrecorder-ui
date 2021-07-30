@@ -25,29 +25,32 @@
 <?php echo file_get_contents('./components/summary.html'); ?>
 
 <div id="app">
-    <div class="logo"><img src="/static/webarch-logo.png" /></div>
-    <div class="nav">
-        <div class="url">
-            <select v-model="url">
-                <option>url</option>
-                <option v-for="sample in sampleData" :value="sample">{{sample}}</option>
-            </select>
-            <input type="button" value="Go" @click="loadUrl"/>
-        </div>
+    <div class="short-nav">
+        <div class="logo"><img src="/static/webarch-logo.png" /></div>
         <timeline-summary
                 v-if="currentPeriod"
                 :period="currentPeriod"
                 :current-snapshot="currentSnapshot"
                 @goto-period="gotoPeriod"
         ></timeline-summary>
-        <span @click="showFullView = !showFullView">+/-</span>
+        <div class="url-and-timeline">
+            <div class="url">
+                <select v-model="url">
+                    <option>url</option>
+                    <option v-for="sample in sampleData" :value="sample">{{sample}}</option>
+                </select>
+                <span @click="loadUrl">&#x21d2;</span>
+            </div>
+            <timeline
+                    v-if="currentPeriod"
+                    :period="currentPeriod"
+                    @goto-period="gotoPeriod"
+                    @goto-snapshot="gotoSnapshot"
+            ></timeline>
+        </div>
+        <span class="full-view-toggle" @click="showFullView = !showFullView"><template v-if="!showFullView">&DownArrowBar;</template><template v-else>&UpArrowBar;</template></span>
     </div>
-    <timeline
-            v-if="currentPeriod"
-            :period="currentPeriod"
-            @goto-period="gotoPeriod"
-            @goto-snapshot="gotoSnapshot"
-    ></timeline>
+
     <div class="full-view" v-if="showFullView && currentPeriod">
         Full View
         <timeline
@@ -119,8 +122,32 @@
         float: left;
         margin-right: 30px;
     }
-    .nav .summary, .nav .url {
-        display: inline-block;
+    .short-nav {
+        position: relative;
+        display: flex;
+        justify-content: flex-start;
+    }
+    .short-nav .logo {
+        flex-shrink: initial;
+    }
+
+    .short-nav .url {
+        text-align: left;
+        margin: 0 25px;
+    }
+    .short-nav .url input, .short-nav .url select {
+        width: 50%;
+    }
+
+    .full-view-toggle {
+        position: absolute;
+        bottom: 0;
+        right: 50px;
+        width: 80px;
+        background-color: lightgray;
+        border: 1px solid gray;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
     }
     .full-view {
         position: absolute;
