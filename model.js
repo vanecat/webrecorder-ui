@@ -187,10 +187,13 @@ PywbPeriod.prototype.getReadableId = function(hasDayCardinalSuffix) {
         case PywbPeriod.Type.month:
             return PywbMonthLabels[this.id];
         case PywbPeriod.Type.day:
-            const singleDigit = this.id % 10;
-            const isTens = Math.floor(this.id / 10) === 1;
-            const suffixes = {1:'st', 2:'nd',3:'rd'};
-            const suffix = hasDayCardinalSuffix ? (isTens || !suffixes[singleDigit] ? 'th' : suffixes[singleDigit]) : '';
+            let suffix = '';
+            if (hasDayCardinalSuffix) {
+                const singleDigit = this.id % 10;
+                const isTens = Math.floor(this.id / 10) === 1;
+                const suffixes = {1:'st', 2:'nd',3:'rd'};
+                suffix = (isTens || !suffixes[singleDigit]) ? 'th' : suffixes[singleDigit];
+            }
             return this.id + suffix;
         case PywbPeriod.Type.hour:
             return (this.id < 13 ? this.id : this.id % 12) + ' ' + (this.id < 12 ? 'am':'pm');
