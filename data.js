@@ -35,6 +35,13 @@ Pywb.makeData = (rawSnaps) => {
         if (lastHour && lastHour !== hour) { lastHour.fillEmptyPeriods(); }
         lastYear = year; lastMonth = month; lastDay = day; lastHour = hour;
     });
+    // fill in the empty periods of the last period
+    if (lastYear) { console.log(lastYear.id); lastYear.fillEmptyPeriods(); }
+    if (lastMonth) { lastMonth.fillEmptyPeriods(); }
+    if (lastDay) { lastDay.fillEmptyPeriods(); }
+    if (lastHour) { lastHour.fillEmptyPeriods(); }
+
+    // fill in top-level period empty child periods
     all.fillEmptyPeriods();
 
     return {groupped: all, linear};
