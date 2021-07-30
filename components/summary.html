@@ -1,9 +1,12 @@
 <script type="text/x-template" id="timeline-summary">
-    <div class="summary">Showing:
+    <div class="summary">
         <template v-if="parents">
-            <span v-for="parent in parents" :key="parent.id" class="item"><a class="goto" @click="changePeriod(parent)">{{parent.getReadableId(true)}}</a> &gt;</span>
+            <span v-for="parent in parents" :key="parent.id" class="item">
+                <a class="goto" @click="changePeriod(parent)">{{parent.getReadableId(true)}}</a>
+                <span class="count">{{parent.snapshotCount}}</span> &gt;
+            </span>
         </template>
-        <span class="item">{{period.getReadableId(true)}} <span v-if="currentSnapshot">&gt;</span></span>
+        <span class="item">{{period.getReadableId(true)}} <span class="count">{{period.snapshotCount}}</span> <span v-if="currentSnapshot">&gt;</span></span>
         <span class="item" v-if="currentSnapshot">{{currentSnapshot.getTimeFormatted()}}</span>
     </div>
 </script>
@@ -41,6 +44,13 @@
 <style>
     .summary {
         font-size: 18px;
+    }
+    .summary .count {
+        display: inline;
+        width: auto;
+        background-color: rgb(200,200,200);
+        padding: 1px;
+        border-radius: 5px;
     }
     .summary .goto {
          margin-right: 5px;
