@@ -1,7 +1,7 @@
 <script type="text/x-template" id="timeline-summary">
     <div class="summary">Showing:
         <template v-if="parents">
-            <span v-for="parent in parents" class="item"><a class="goto" @click="changePeriod(parent)">{{parent.getReadableId(true)}}</a> &gt;</span>
+            <span v-for="parent in parents" :key="parent.id" class="item"><a class="goto" @click="changePeriod(parent)">{{parent.getReadableId(true)}}</a> &gt;</span>
         </template>
         <span class="item">{{period.getReadableId(true)}} <span v-if="currentSnapshot">&gt;</span></span>
         <span class="item" v-if="currentSnapshot">{{currentSnapshot.getTimeFormatted()}}</span>

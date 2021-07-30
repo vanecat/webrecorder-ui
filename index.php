@@ -52,6 +52,7 @@
         Full View
         <timeline
                 v-for="period in currentPeriod.children"
+                :key="period.id"
                 :period="period"
                 @goto-period="gotoPeriod"
                 @goto-snapshot="gotoSnapshot"
