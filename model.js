@@ -96,25 +96,27 @@ PywbPeriod.prototype.addChild = function(period) {
     return true;
 };
 
-PywbPeriod.prototype.fillEmptyPeriods = function() {
-    let idRange = [];
+PywbPeriod.prototype.getChildrenRange = function() {
     switch (this.type) {
         case PywbPeriod.Type.all:
             // year range: first to last year available
-            idRange = [this.children[0].id, this.children[this.children.length-1].id]; break;
+            return [this.children[0].id, this.children[this.children.length-1].id];
         case PywbPeriod.Type.year:
             // month is simple: 1 to 12
-            idRange = [1,12]; break;
+            return [1,12];
         case PywbPeriod.Type.month:
             // days in month: 1 to last day in month
             const y = this.parent.id; const m = this.id;
             const lastDateInMonth = (new Date((new Date(y, m, 1)).getTime() - 1000)).getDate(); // 1 sec earlier
-            idRange = [1, lastDateInMonth]; break;
+            return [1, lastDateInMonth];
         case PywbPeriod.Type.day:
             // hours: 0 to 23
-            idRange = [0,23]; break;
+            return [0,23];
     }
-
+    return null;
+}
+PywbPeriod.prototype.fillEmptyPeriods = function() {
+    const idRange = this.getChildrenRange();
     let i = 0;
     for (let newId = idRange[0]; newId <= idRange[1]; newId++) {
 
