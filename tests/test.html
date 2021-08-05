@@ -22,14 +22,18 @@
                 try {
                     const {periods, linear} = Pywb.makeData(data);
                 } catch(e) {
-                    this.msgs.push(e.message);
+                    this.addMsg(e.message);
                 }
+                this.addMsg('test app is loaded');
             },
             methods: {
+                addMsg(msg) {
+                    this.msgs.push(msg);
+                }
             }
         });
     }
-    fetch('/data-sample-long.json').then(r => r.json()).then(data => init(data));
+    fetch('/sample-data/bbc-com.json').then(r => r.json()).then(data => init(data));
 </script>
 </body>
 </html>
