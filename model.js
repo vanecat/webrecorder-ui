@@ -135,11 +135,13 @@ PywbPeriod.prototype.fillEmptyPeriods = function() {
                     // insert new after existing
                     this.children.splice(i+1, 0, empty);
                 }
+                empty.parent = this;
             }
             i++;
         } else {
             const empty = new PywbPeriod({type: this.type + 1, id: newId});
             this.children.push(empty);
+            empty.parent = this;
         }
     }
 
