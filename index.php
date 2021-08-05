@@ -12,6 +12,7 @@
 <body>
 <?php echo file_get_contents('./components/timeline.html'); ?>
 <?php echo file_get_contents('./components/summary.html'); ?>
+<?php echo file_get_contents('./components/calendar-month.html'); ?>
 
 <div id="app">
     <div class="short-nav">
@@ -40,15 +41,15 @@
         <span class="full-view-toggle" @click="showFullView = !showFullView"><template v-if="!showFullView">&DownArrowBar;</template><template v-else>&UpArrowBar;</template></span>
     </div>
 
-    <div class="full-view" v-if="showFullView && currentPeriod">
+    <div class="full-view" v-if="showFullView && currentPeriod && currentPeriod.type === 1">
         Full View
-        <timeline
-                v-for="period in currentPeriod.children"
-                :key="period.id"
-                :period="period"
+        <calendar-month
+                v-for="month in currentPeriod.children"
+                key="month.id"
+                :month="month"
                 @goto-period="gotoPeriod"
                 @goto-snapshot="gotoSnapshot"
-        ></timeline>
+        ></calendar-month>
     </div>
     <div class="iframe" v-if="currentSnapshot">
         <iframe :src="currentSnapshot.load_url"></iframe>
