@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test App</title>
+    <script src="../model.js"></script>
+    <script src="../data.js"></script>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="test-app">
+    <div v-for="msg in msgs">{{msg}}</div>
+</div>
+<script>
+    function init(data) {
+        new Vue({
+            el: '#test-app',
+            data: {
+                msgs: []
+            },
+            mounted() {
+                try {
+                    const {periods, linear} = Pywb.makeData(data);
+                } catch(e) {
+                    this.msgs.push(e.message);
+                }
+            },
+            methods: {
+            }
+        });
+    }
+    fetch('/data-sample-long.json').then(r => r.json()).then(data => init(data));
+</script>
+</body>
+</html>
