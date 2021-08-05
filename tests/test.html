@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Test App</title>
+    <script src="../init.js"></script>
     <script src="../model.js"></script>
     <script src="../data.js"></script>
     <script src="../vue.js"></script>
@@ -12,28 +13,34 @@
     <div v-for="msg in msgs">{{msg}}</div>
 </div>
 <script>
-    function init(data) {
-        new Vue({
-            el: '#test-app',
-            data: {
-                msgs: []
+    Pywb.vue.app = {
+        el: '#test-app',
+        data: {
+            msgs: []
+        },
+        mounted() {
+            this.addMsg('test app is loaded');
+            this.loadData();
+        },
+        methods: {
+            loadData() {
+                fetch('/sample-data/bbc-com.json').then(r => r.json()).then(data => this.onLoadData(data));
             },
-            mounted() {
+            onLoadData(data) {
                 try {
-                    const {periods, linear} = Pywb.makeData(data);
+                    const {timeline, linear} = Pywb.makeData(data);
+                    this.addMsg('data loaded');
+                    this.addMsg(`${linear.length} records parsed`);
                 } catch(e) {
                     this.addMsg(e.message);
                 }
-                this.addMsg('test app is loaded');
             },
-            methods: {
-                addMsg(msg) {
-                    this.msgs.push(msg);
-                }
+            addMsg(msg) {
+                this.msgs.push(msg);
             }
-        });
-    }
-    fetch('/sample-data/bbc-com.json').then(r => r.json()).then(data => init(data));
+        }
+    };
+    Pywb.init();
 </script>
 </body>
 </html>

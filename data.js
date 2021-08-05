@@ -44,5 +44,5 @@ Pywb.makeData = (rawSnaps) => {
     // fill in top-level period empty child periods
     all.fillEmptyPeriods();
 
-    return {groupped: all, linear};
+    return {timeline: all, linear};
 };

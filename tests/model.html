@@ -50,9 +50,9 @@
             },
             mounted() {
                 try {
-                    const {groupped, linear} = Pywb.makeData(data);
+                    const {timeline, linear} = Pywb.makeData(data);
                     this.snaps = linear;
-                    this.timeline = groupped;
+                    this.timeline = timeline;
                 } catch(e) {
                     this.msgs.push(e.message);
                 }
@@ -64,7 +64,7 @@
             }
         });
     }
-    fetch('/data-sample-long.json').then(r => r.json()).then(data => init(data));
+    fetch('/sample-data/bbc-com.json').then(r => r.json()).then(data => init(data));
 </script>
 </body>
 </html>

@@ -5,18 +5,7 @@
     <title>Web archive UI</title>
     <link type="text/css" rel="stylesheet" href="main.css" />
     <script src="vue.js"></script>
-    <script>
-        const Pywb = {
-            data: {},
-            vue: {app:{}, components:{} },
-            init: () => {
-                Object.keys(Pywb.vue.components).forEach(function(componentId) {
-                    Vue.component(componentId, Pywb.vue.components[componentId]);
-                });
-                Pywb.vue.app = new Vue(Pywb.vue.app);
-            }
-        };
-    </script>
+    <script src="init.js"></script>
     <script src="model.js"></script>
     <script src="data.js"></script>
 </head>
@@ -91,9 +80,9 @@
             },
             initData(data) {
                 try {
-                    const {groupped, linear} = Pywb.makeData(data);
+                    const {timeline, linear} = Pywb.makeData(data);
                     this.snapshots = linear;
-                    this.currentPeriod = groupped;
+                    this.currentPeriod = timeline;
                 } catch(e) {
                     this.msgs.push(e.message);
                 }
