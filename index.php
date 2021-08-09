@@ -126,6 +126,7 @@
 
     .short-nav .url-and-timeline {
         flex-grow: 2;
+        overflow-x: hidden;
     }
 
     .short-nav .url {
