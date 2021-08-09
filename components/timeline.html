@@ -128,8 +128,7 @@
                 this.adjustWidthAndScroll();
             },
             adjustWidthAndScroll() {
-                const periodsContainerStyle = window.getComputedStyle(this.$refs.periods);
-                this.$refs.periodScroll.style.maxWidth = periodsContainerStyle.width;
+                this.$refs.periodScroll.style.maxWidth = this.$refs.periods._computedStyle.width;
             }
         }
     };
