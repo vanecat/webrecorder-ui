@@ -142,7 +142,7 @@
     }
     .full-view {
         position: absolute;
-        top: 100px;
+        top: 120px;
         left: 0;
         height: 80vh;
         width: 100%;
