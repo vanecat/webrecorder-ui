@@ -104,6 +104,7 @@
     #app {
         border-bottom: 1px solid lightcoral;
         height: 110px;
+        width: 100%;
     }
     .iframe iframe {
         width: 100%;
@@ -114,12 +115,17 @@
         margin-right: 30px;
     }
     .short-nav {
+        width: 100%;
         position: relative;
         display: flex;
         justify-content: flex-start;
     }
     .short-nav .logo {
         flex-shrink: initial;
+    }
+
+    .short-nav .url-and-timeline {
+        flex-grow: 2;
     }
 
     .short-nav .url {
