@@ -8,6 +8,7 @@
     <script src="init.js"></script>
     <script src="model.js"></script>
     <script src="data.js"></script>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
 </head>
 <body>
 <?php echo file_get_contents('./components/timeline.html'); ?>
