@@ -48,15 +48,18 @@
                 },
                 highlightPeriod: null,
                 isScrollZero: true,
-                isScrollMax: false,
+                isScrollMax: true,
             };
         },
         mounted: function() {
-            this.$refs.periodScroll.addEventListener('scroll', this.saveScroll);
             this.$refs.periods._computedStyle = window.getComputedStyle(this.$refs.periods);
             this.$refs.periodScroll._computedStyle = window.getComputedStyle(this.$refs.periodScroll);
             this.$watch('period', this.onPeriodChanged);
             this.adjustWidthAndScroll();
+
+            this.$refs.periodScroll.addEventListener('scroll', this.updateScrollArrows);
+            window.addEventListener('resize', this.updateScrollArrows);
+            this.updateScrollArrows();
         },
         computed: {
             subPeriodBoxWidth: function() {
@@ -73,17 +76,11 @@
             // do something on update
         },
         methods: {
-            saveScroll() {
+            updateScrollArrows() {
                 this.period.scroll = this.$refs.periodScroll.scrollLeft;
-                if (this.period.scroll) {
-                    // more than 0
-                    const maxScroll = parseInt(this.$refs.periods._computedStyle.width) - parseInt(this.$refs.periodScroll._computedStyle.width);
-                    this.isScrollZero = false;
-                    this.isScrollMax = Math.abs(maxScroll - this.period.scroll) < 5;
-                } else {
-                    this.isScrollZero = true;
-                    this.isScrollMax = false;
-                }
+                const maxScroll = parseInt(this.$refs.periods._computedStyle.width) - parseInt(this.$refs.periodScroll._computedStyle.width);
+                this.isScrollZero = !this.period.scroll; // if 0, then true (we are at scroll zero)
+                this.isScrollMax = Math.abs(maxScroll - this.period.scroll) < 5;
             },
             restoreScroll() {
                 this.$refs.periodScroll.scrollLeft = this.period.scroll;
