@@ -14,6 +14,9 @@
         text-align: center;
         z-index: 20;
     }
+    .calendar-month .day.empty {
+        color: gray;
+    }
     .calendar-month .day .count {
         display: none;
         position: absolute;
@@ -38,7 +41,7 @@
     <div class="calendar-month">
         {{month.parent.id}}/{{month.id}}:<br/>
         <span v-for="(day) in ['S', 'M', 'T', 'W', 'H', 'F', 'S']" class="day" :style="dayStyle">{{day}}</span><br/>
-        <span v-for="(day,i) in days"><br v-if="i && i % 7===0"/><span class="day" :style="dayStyle"><template v-if="day"><span class="size" :style="getDayCountCircleStyle(day.snapshotCount)"></span>{{day.id}}<span class="count" v-if="day.snapshotCount">{{day.snapshotCount}}</span></template><template v-else>&nbsp;</template></span></span>
+        <span v-for="(day,i) in days"><br v-if="i && i % 7===0"/><span class="day" :class="{empty: !day || !day.snapshotCount}" :style="dayStyle"><template v-if="day"><span class="size" :style="getDayCountCircleStyle(day.snapshotCount)"></span>{{day.id}}<span class="count" v-if="day.snapshotCount">{{day.snapshotCount}}</span></template><template v-else>&nbsp;</template></span></span>
     </div>
 </script>
 
