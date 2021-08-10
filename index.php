@@ -43,7 +43,7 @@
                     @goto-period="gotoPeriod"
             ></timeline-summary>
             <span class="full-view-toggle" :class="{expanded: showFullView}" @click="showFullView = !showFullView">
-                <template v-if="!showFullView">&DownArrowBar;</template><template v-else>&UpArrowBar;</template>
+                <template v-if="!showFullView">&DownArrowBar; <span class="detail">show year calendar</span></template><template v-else>&UpArrowBar; <span class="detail">hide year calendar</span></template>
             </span>
         </div>
     </div>
@@ -149,16 +149,23 @@
         padding-left: 30px;
         background-image: url(/static/calendar-icon.png);
         background-repeat: no-repeat;
-        background-position: 0 0;
+        background-position: 0 2px;
         background-size: 30px;
         line-height: 30px;
+        border-radius: 5px;
         cursor: zoom-in;
     }
     .full-view-toggle:hover {
         background-color: #eeeeee;
-        border-radius: 5px;
+    }
+    .full-view-toggle .detail {
+        display: none;
+    }
+    .full-view-toggle:hover .detail {
+        display: inline;
     }
     .full-view-toggle.expanded {
+        background-color: #eeeeee;
         cursor: zoom-out;
     }
 </style>
