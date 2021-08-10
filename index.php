@@ -26,7 +26,7 @@
                         <option>url</option>
                         <option v-for="sample in sampleData" :value="sample">{{sample}}</option>
                     </select>
-                    <span @click="loadUrl">&#x21d2;</span>
+                    <span class="go-btn" @click="loadUrl">Load snapshots &RightArrowBar;</span>
                 </div>
                 <timeline
                         v-if="currentPeriod"
@@ -139,6 +139,23 @@
     .short-nav .url {
         text-align: left;
         margin: 0 25px;
+    }
+    .short-nav .url .go-btn {
+        position: relative;
+        left: 0;
+        display: inline-block;
+        height: 15px;
+        line-height: 15px;
+        padding: 2px;
+        border: 1px solid black;
+        border-radius: 5px;
+        background-color: #eeeeee;
+        cursor: pointer;
+        transition: left 300ms ease-in, background-color 300ms ease-in;
+    }
+    .short-nav .url .go-btn:hover {
+        background-color: antiquewhite;
+        left: 3px;
     }
     .short-nav .url input, .short-nav .url select {
         width: 50%;
