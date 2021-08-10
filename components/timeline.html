@@ -103,9 +103,8 @@
             },
             scrollPrev: function () {
                 if (this.isScrollZero) {
-                    const previous = this.period.getPrevious();
-                    if (previous) {
-                        this.$emit('goto-period', previous);
+                    if (this.previousPeriod) {
+                        this.$emit('goto-period', this.previousPeriod);
                     }
                 } else {
                     this.$refs.periodScroll.scrollLeft -= 30;
