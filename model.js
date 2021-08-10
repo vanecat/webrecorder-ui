@@ -281,7 +281,7 @@ PywbPeriod.prototype.getFullReadableId = function(hasDayCardinalSuffix) {
 PywbPeriod.prototype.getReadableId = function(hasDayCardinalSuffix) {
     switch (this.type) {
         case PywbPeriod.Type.all:
-            return 'All';
+            return 'All-time';
         case PywbPeriod.Type.year:
             return this.id;
         case PywbPeriod.Type.month:
