@@ -47,7 +47,7 @@
         Full View
         <calendar-month
                 v-for="month in currentPeriod.children"
-                key="month.id"
+                :key="month.id"
                 :month="month"
                 @goto-period="gotoPeriod"
         ></calendar-month>
