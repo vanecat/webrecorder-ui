@@ -138,9 +138,9 @@ PywbPeriod.prototype.fillEmptyChildPeriods = function(isFillEmptyGrandChildrenPe
         return;
     }
     if (this.hasFilledEmptyChildPeriods) {
-        this.hasFilledEmptyChildPeriods = true;
         return;
     }
+    this.hasFilledEmptyChildPeriods = true;
 
     let i = 0;
     for (let newId = idRange[0]; newId <= idRange[1]; newId++) {
