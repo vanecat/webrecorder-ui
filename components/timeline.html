@@ -7,7 +7,7 @@
                      :key="subPeriod.id"
                      class="period"
                      :class="{empty: !subPeriod.snapshotCount, highlight: highlightPeriod === subPeriod}"
-                     :style="{width: (subPeriod.children.length ? subPeriodBoxWidth:emptySubPeriodBoxWidth)+'px'}"
+                     :style="{width: subPeriodBoxWidth+'px'}"
                      v-on:click="changePeriod(subPeriod)">
                     <div class="histo">
                         <div class="count" v-if="!subPeriod.snapshot"><span class="count-inner">{{subPeriod.snapshotCount}}</span></div>
