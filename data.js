@@ -2,6 +2,7 @@ if (!window.Pywb) window.Pywb = {};
 Pywb.makeData = (rawSnaps) => {
     const allTimePeriod = new PywbPeriod({type: PywbPeriod.Type.all, id: 'all'});
     const snapshots = [];
+    let lastSingle = null;
     rawSnaps.forEach((rawSnap, i) => {
         const snap = new PywbSnapshot(rawSnap, i);
         let year, month, day, hour, single;
@@ -26,6 +27,12 @@ Pywb.makeData = (rawSnaps) => {
             hour.addChild(single);
         }
         single.setSnapshot(snap);
+        if (lastSingle) {
+            lastSingle.nextSnapshotPeriod = single;
+            single.previousSnapshotPeriod = lastSingle;
+        }
+        lastSingle = single;
+
         snapshots.push(snap);
     });
 

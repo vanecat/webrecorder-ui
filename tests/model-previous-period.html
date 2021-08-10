@@ -10,8 +10,10 @@
 <body>
 <div id="app">
     <div v-for="msg in msgs">{{msg}}</div>
-    <div v-if="current">current: {{current.id}} <input type="button" @click="getPrevious" value="previous"/></div>
-    <div v-if="previous">previous: {{previous.id}} </div>
+    <input type="button" @click="getPrevious" value="&lt;&lt;  previous"/>
+    <input type="button" @click="getNext" value="next &gt;&gt;"/>
+    <div v-if="current">current: {{current.getFullReadableId()}}</div>
+    <div v-if="previous">previous: {{previous.getFullReadableId()}} </div>
 </div>
 <script>
     function init(data_) {
@@ -26,17 +28,23 @@
             mounted() {
                 try {
                     const data = Pywb.makeData(data_);
-                    this.current = data.timeline.getChildById(2015).getChildById(10).getChildById(8);
+                    this.current = data.timeline.getChildById(2015).getChildById(1).getChildById(1);
                 } catch(e) {
                     this.msgs.push(e.message);
                 }
             },
             methods: {
                 getPrevious() {
-                    if (!this.previous) {
-                        this.previous = this.current;
+                    const previous = this.current.getPrevious();
+                    if (previous) {
+                        this.current = previous;
                     }
-                    this.previous = this.previous.getPrevious();
+                },
+                getNext() {
+                    const next = this.current.getNext();
+                    if (next) {
+                        this.current = next;
+                    }
                 }
             }
         });

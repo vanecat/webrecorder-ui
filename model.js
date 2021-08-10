@@ -75,31 +75,78 @@ PywbPeriod.GetTypeLabel = function(type) {
 PywbPeriod.prototype.getChildById = function(id) {
     return this.children[this.childrenIds[id]];
 }
-PywbPeriod.prototype.getPrevious = function() {
-    if (!this.parent) {
-        return null;
-    }
-    this.parent.getPreviousChild(this);
+
+// previous period (ONLY SET at the period level/type: snapshot)
+PywbPeriod.prototype.previousSnapshotPeriod = null;
+// next period (ONLY SET at the period level/type: snapshot)
+PywbPeriod.prototype.nextSnapshotPeriod = null;
+
+PywbPeriod.prototype.getFirstSnapshotPeriod = function(nonEmptyOnly=false) {
+    return this.getFirstLastSnapshotPeriod_('first', nonEmptyOnly);
 }
-PywbPeriod.prototype.getPreviousChild = function(child) {
-    const childIndex = this.childrenIds[child.id];
-    if (childIndex <= 0) {
+PywbPeriod.prototype.getLastSnapshotPeriod = function(nonEmptyOnly=false) {
+    return this.getFirstLastSnapshotPeriod_('last', nonEmptyOnly);
+}
+PywbPeriod.prototype.getFirstLastSnapshotPeriod_ = function(direction, nonEmptyOnly=false) {
+    let period = this;
+    while (period.snapshotCount && period.type !== PywbPeriod.Type.snapshot) {
+        let i = 0;
+        if (nonEmptyOnly) {
+            for(i; i < period.children.length; i++) {
+                if (period.children[direction === 'first' ? i : (period.children.length - 1 - i)].snapshotCount) {
+                    break;
+                }
+            }
+        }
+        period = period.children[direction === 'first' ? i : (period.children.length - 1 - i)];
+    }
+    if (period.type === PywbPeriod.Type.snapshot && period.snapshot) {
+        return period;
+    }
+    return null;
+}
+
+PywbPeriod.prototype.getPrevious = function() {
+    const firstSnapshotPeriod = this.getFirstSnapshotPeriod();
+    if (!firstSnapshotPeriod) {
         return null;
     }
-    return this.children[childIndex-1];
+    const previousSnapshotPeriod = firstSnapshotPeriod.previousSnapshotPeriod;
+    if (!previousSnapshotPeriod) {
+        return null;
+    }
+    if (this.type === PywbPeriod.Type.snapshot) {
+        return previousSnapshotPeriod;
+    }
+    let parent = previousSnapshotPeriod.parent;
+    while(parent) {
+        if (parent.type === this.type) {
+            break;
+        }
+        parent = parent.parent;
+    }
+    return parent;
 }
 PywbPeriod.prototype.getNext = function() {
-    if (!this.parent) {
+    const lastSnapshotPeriod = this.getLastSnapshotPeriod();
+    if (!lastSnapshotPeriod) {
         return null;
     }
-    this.parent.getNextChild(this);
-}
-PywbPeriod.prototype.getNextChild = function(child) {
-    const childIndex = this.childrenIds[child.id];
-    if (childIndex >= this.children.length-1) {
+    const nextSnapshotPeriod = lastSnapshotPeriod.nextSnapshotPeriod;
+    if (!nextSnapshotPeriod) {
         return null;
     }
-    return this.children[childIndex+1];
+    if (this.type === PywbPeriod.Type.snapshot) {
+        return nextSnapshotPeriod;
+    }
+    let parent = nextSnapshotPeriod.parent;
+    while(parent) {
+        if (parent.type === this.type) {
+            break;
+        }
+        parent = parent.parent;
+    }
+    return parent;
 }
 
 PywbPeriod.prototype.parent = null;
@@ -212,6 +259,9 @@ PywbPeriod.prototype.setSnapshot = function(snap) {
     }
 };
 
+PywbPeriod.prototype.getFullReadableId = function(hasDayCardinalSuffix) {
+    return this.getParents().map(p => p.getReadableId()).join(' ') + this.getReadableId();
+}
 PywbPeriod.prototype.getReadableId = function(hasDayCardinalSuffix) {
     switch (this.type) {
         case PywbPeriod.Type.all:
