@@ -51,6 +51,9 @@
                 isScrollMax: true,
             };
         },
+        created: function() {
+            this.addEmptySubPeriods();
+        },
         mounted: function() {
             this.$refs.periods._computedStyle = window.getComputedStyle(this.$refs.periods);
             this.$refs.periodScroll._computedStyle = window.getComputedStyle(this.$refs.periodScroll);
@@ -76,6 +79,9 @@
             // do something on update
         },
         methods: {
+            addEmptySubPeriods() {
+                this.period.fillEmptyChildPeriods(true);
+            },
             updateScrollArrows() {
                 this.period.scroll = this.$refs.periodScroll.scrollLeft;
                 const maxScroll = parseInt(this.$refs.periods._computedStyle.width) - parseInt(this.$refs.periodScroll._computedStyle.width);
@@ -109,6 +115,7 @@
                 }
             },
             onPeriodChanged(newPeriod, oldPeriod) {
+                this.addEmptySubPeriods();
                 // detect if going up level of period (new period type should be in old period parents)
                 if (oldPeriod.type - newPeriod.type > 0) {
                     let highlightPeriod = oldPeriod;
