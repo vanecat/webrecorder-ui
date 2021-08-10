@@ -182,28 +182,41 @@ PywbPeriod.prototype.getChildrenRange = function() {
     }
     return null;
 }
-PywbPeriod.prototype.fillEmptyChildPeriods = function(isFillEmptyGrandChildrenPeriods=false) {
-    const idRange = this.getChildrenRange();
-    if (!idRange) {
+PywbPeriod.prototype.fillEmptyGrancChildPeriods = function() {
+    if (this.hasFilledEmptyGrandchildPeriods) {
         return;
     }
+    this.children.forEach(c => {
+        c.fillEmptyChildPeriods();
+    });
+    this.hasFilledEmptyGrandchildPeriods = true;
+}
+
+PywbPeriod.prototype.fillEmptyChildPeriods = function(isFillEmptyGrandChildrenPeriods=false) {
+    if (this.snapshotCount === 0 || this.type > PywbPeriod.Type.day) {
+        return;
+    }
+
+    if (isFillEmptyGrandChildrenPeriods) {
+        this.fillEmptyGrancChildPeriods();
+    }
+
     if (this.hasFilledEmptyChildPeriods) {
         return;
     }
     this.hasFilledEmptyChildPeriods = true;
 
+    const idRange = this.getChildrenRange();
+    if (!idRange) {
+        return;
+    }
+
     let i = 0;
     for (let newId = idRange[0]; newId <= idRange[1]; newId++) {
-
         if (i < this.children.length) {
             // if existing and new id match, skip, item already in place
-            if (this.children[i].id === newId) {
-                if (isFillEmptyGrandChildrenPeriods) {
-                    this.children[i].fillEmptyChildPeriods();
-                }
-            }
             // else
-            else if (this.children[i].id !== newId) {
+            if (this.children[i].id !== newId) {
                 const empty = new PywbPeriod({type: this.type + 1, id: newId})
                 if (newId < this.children[i].id) {
                     // insert new before existing
