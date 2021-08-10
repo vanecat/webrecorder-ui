@@ -60,8 +60,6 @@ function PywbPeriod(init) {
 
     this.maxGrandchildSnapshotCount = 0;
     this.snapshotCount = 0;
-
-    this.lastScroll = init.lastScroll;
 }
 PywbPeriod.Type = {all: 0,year: 1,month: 2,day: 3,hour: 4,snapshot:5};
 PywbPeriod.TypeLabel = ['timeline','year','month','day','hour','snapshot'];
