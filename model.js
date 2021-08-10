@@ -81,24 +81,27 @@ PywbPeriod.prototype.previousSnapshotPeriod = null;
 // next period (ONLY SET at the period level/type: snapshot)
 PywbPeriod.prototype.nextSnapshotPeriod = null;
 
-PywbPeriod.prototype.getFirstSnapshotPeriod = function(nonEmptyOnly=false) {
-    return this.getFirstLastSnapshotPeriod_('first', nonEmptyOnly);
+PywbPeriod.prototype.getFirstSnapshotPeriod = function() {
+    return this.getFirstLastSnapshotPeriod_('first');
 }
-PywbPeriod.prototype.getLastSnapshotPeriod = function(nonEmptyOnly=false) {
-    return this.getFirstLastSnapshotPeriod_('last', nonEmptyOnly);
+PywbPeriod.prototype.getLastSnapshotPeriod = function() {
+    return this.getFirstLastSnapshotPeriod_('last');
 }
-PywbPeriod.prototype.getFirstLastSnapshotPeriod_ = function(direction, nonEmptyOnly=false) {
+PywbPeriod.prototype.getFirstLastSnapshotPeriod_ = function(direction) {
     let period = this;
+    let iFailSafe = 100; // in case a parser has a bug and the snapshotCount is not correct; avoid infinite-loop
     while (period.snapshotCount && period.type !== PywbPeriod.Type.snapshot) {
         let i = 0;
-        if (nonEmptyOnly) {
-            for(i; i < period.children.length; i++) {
-                if (period.children[direction === 'first' ? i : (period.children.length - 1 - i)].snapshotCount) {
-                    break;
-                }
+        for(i=0; i < period.children.length; i++) {
+            const ii = direction === 'first' ? i : (period.children.length - 1 - i);
+            if (period.children[ii].snapshotCount) {
+                period = period.children[ii];
+                break;
             }
         }
-        period = period.children[direction === 'first' ? i : (period.children.length - 1 - i)];
+        if (iFailSafe-- < 0) {
+            break;
+        }
     }
     if (period.type === PywbPeriod.Type.snapshot && period.snapshot) {
         return period;

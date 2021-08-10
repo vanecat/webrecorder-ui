@@ -92,10 +92,24 @@
                 this.$refs.periodScroll.scrollLeft = this.period.scroll;
             },
             scrollNext: function () {
-                this.$refs.periodScroll.scrollLeft += 30;
+                if (this.isScrollMax) {
+                    const next = this.period.getNext();
+                    if (next) {
+                        this.$emit('goto-period', next);
+                    }
+                } else {
+                    this.$refs.periodScroll.scrollLeft += 30;
+                }
             },
             scrollPrev: function () {
-                this.$refs.periodScroll.scrollLeft -= 30;
+                if (this.isScrollZero) {
+                    const previous = this.period.getPrevious();
+                    if (previous) {
+                        this.$emit('goto-period', previous);
+                    }
+                } else {
+                    this.$refs.periodScroll.scrollLeft -= 30;
+                }
             },
             getTimeFormatted: function(date) {
                 return (date.hour < 13 ? date.hour : (date.hour % 12)) + ':' + ((date.minute < 10 ? '0':'')+date.minute) + ' ' + (date.hour < 12 ? 'am':'pm');
