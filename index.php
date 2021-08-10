@@ -17,28 +17,29 @@
 
 <div id="app">
     <div class="short-nav">
-        <div class="logo"><img src="/static/webarch-logo.png" /></div>
+        <div class="inner">
+            <div class="logo"><img src="/static/webarch-logo.png" /></div>
+            <div class="url-and-timeline">
+                <div class="url">
+                    <select v-model="url">
+                        <option>url</option>
+                        <option v-for="sample in sampleData" :value="sample">{{sample}}</option>
+                    </select>
+                    <span @click="loadUrl">&#x21d2;</span>
+                </div>
+                <timeline
+                        v-if="currentPeriod"
+                        :period="currentPeriod"
+                        @goto-period="gotoPeriod"
+                ></timeline>
+            </div>
+        </div>
         <timeline-summary
                 v-if="currentPeriod"
                 :period="currentPeriod"
                 :current-snapshot="currentSnapshot"
                 @goto-period="gotoPeriod"
         ></timeline-summary>
-        <div class="url-and-timeline">
-            <div class="url">
-                <select v-model="url">
-                    <option>url</option>
-                    <option v-for="sample in sampleData" :value="sample">{{sample}}</option>
-                </select>
-                <span @click="loadUrl">&#x21d2;</span>
-            </div>
-            <timeline
-                    v-if="currentPeriod"
-                    :period="currentPeriod"
-                    @goto-period="gotoPeriod"
-                    @goto-snapshot="gotoSnapshot"
-            ></timeline>
-        </div>
         <span class="full-view-toggle" @click="showFullView = !showFullView"><template v-if="!showFullView">&DownArrowBar;</template><template v-else>&UpArrowBar;</template></span>
     </div>
 
@@ -49,7 +50,6 @@
                 key="month.id"
                 :month="month"
                 @goto-period="gotoPeriod"
-                @goto-snapshot="gotoSnapshot"
         ></calendar-month>
     </div>
     <div class="iframe" v-if="currentSnapshot">
@@ -103,7 +103,7 @@
 <style>
     #app {
         border-bottom: 1px solid lightcoral;
-        height: 110px;
+        /*height: 150px;*/
         width: 100%;
     }
     .iframe iframe {
@@ -111,12 +111,14 @@
         height: 80vh;
     }
     .logo {
-        float: left;
         margin-right: 30px;
+        width: 180px;
     }
     .short-nav {
         width: 100%;
         position: relative;
+    }
+    .short-nav .inner {
         display: flex;
         justify-content: flex-start;
     }
