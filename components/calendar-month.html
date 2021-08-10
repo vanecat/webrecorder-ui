@@ -1,18 +1,33 @@
 <style>
     .calendar-month {
+        position: relative;
         display: inline-block;
         padding: 5px;
-        margin: 15px;
-        /*height: 120px;*/
+        margin: 0;
+        height: 240px;
+        width: 220px;
+        text-align: center;
         vertical-align: top;
-        border: 1px;
+    }
+    .calendar-month:hover {
+        background-color: #eeeeee;
+        border-radius: 10px;
+    }
+    .calendar-month > h3 {
+        margin: 0;
+        font-size: 16px;
+    }
+    .calendar-month > .empty {
+        position: absolute;
+        top: 45%;
+        width: 100%;
+        color: gray;
     }
     .calendar-month .day {
         position: relative;
         display: inline-block;
         margin: 0;
         text-align: center;
-        z-index: 20;
     }
     .calendar-month .day.empty {
         color: gray;
@@ -20,38 +35,50 @@
     .calendar-month .day .count {
         display: none;
         position: absolute;
-        top: -20%;
-        right: -20%;
-        padding: 1px;
-        border-radius: 2px;
+        bottom: 80%;
+        left: 80%;
+        line-height: 1; /* reset to normal */
+        padding: 3px;
+        border-radius: 10px;
+        border-bottom-left-radius: 0;
+        border: 1px solid gray;
         background-color: white;
         z-index: 30;
+        white-space: nowrap;
     }
     .calendar-month .day:hover .count {
         display: block;
     }
     .calendar-month .day .size {
         position: absolute;
+        box-sizing: border-box;
         background-color: rgba(200,100,100,.5);
         z-index: 10;
+    }
+
+    .calendar-month .day:hover .size {
+        border: 1px solid black;
+        cursor: zoom-in;
     }
 </style>
 
 <script type="text/x-template" id="calendar-month">
     <div class="calendar-month">
-        {{month.parent.id}}/{{month.id}}:<br/>
-        <span v-for="(day) in ['S', 'M', 'T', 'W', 'H', 'F', 'S']" class="day" :style="dayStyle">{{day}}</span><br/>
-        <span v-for="(day,i) in days"><br v-if="i && i % 7===0"/><span class="day" :class="{empty: !day || !day.snapshotCount}" :style="dayStyle"><template v-if="day"><span class="size" :style="getDayCountCircleStyle(day.snapshotCount)"></span>{{day.id}}<span class="count" v-if="day.snapshotCount">{{day.snapshotCount}}</span></template><template v-else>&nbsp;</template></span></span>
+        <h3>{{month.getReadableId()}}</h3>
+        <div v-if="month.snapshotCount">
+            <span v-for="(day) in ['S', 'M', 'T', 'W', 'H', 'F', 'S']" class="day" :style="dayStyle">{{day}}</span><br/>
+            <span v-for="(day,i) in days"><br v-if="i && i % 7===0"/><span class="day" :class="{empty: !day || !day.snapshotCount}" :style="dayStyle"><template v-if="day"><span class="size" v-if="day.snapshotCount" :style="getDayCountCircleStyle(day.snapshotCount)" @click="$emit('goto-period', day)"></span>{{day.id}}<span v-if="day.snapshotCount" class="count">{{day.snapshotCount}} snapshot<span v-if="day.snapshotCount!==1">s</span></span></template><template v-else>&nbsp;</template></span></span>
+        </div>
+        <div v-else class="empty">no snapshots</div>
     </div>
 </script>
 
 <script type="text/javascript">
     Pywb.vue.components['calendar-month'] = {
         template: '#calendar-month',
-        props: ['month'],
+        props: ['month', 'year'],
         data: function() {
             return {
-                days: [],
                 maxInDay: 0,
                 daySize: 30,
             };
@@ -60,34 +87,37 @@
             dayStyle() {
                 const s = this.daySize;
                 return `height: ${s}px; width: ${s}px; line-height: ${s}px`;
+            },
+            days() {
+                if (!this.month || !this.month.snapshotCount) {
+                    return [];
+                }
+                const days = [];
+                // Get days in month, and days in the complete weeks before first day and after last day
+                const [firstDay, lastDay] = this.month.getChildrenRange();
+                const daysBeforeFirst = (new Date(this.year.id, this.month.id-1, firstDay)).getDay();
+                const daysAfterLastDay = (6 - (new Date(this.year.id, this.month.id-1, lastDay)).getDay());
+                for(let i=0; i<daysBeforeFirst; i++) {
+                    days.push(null);
+                }
+                const hasChildren = !!this.month.children.length;
+                for(let i=0; i<lastDay; i++) {
+                    days.push(hasChildren ? this.month.children[i] : null);
+                }
+                for(let i=0; i<daysAfterLastDay; i++) {
+                    days.push(null);
+                }
+                return days;
             }
-        },
-        mounted() {
-            // Get days in month, and days in the complete weeks before first day and after last day
-            const [firstDay, lastDay] = this.month.getChildrenRange();
-            const daysBeforeFirst = (new Date(this.month.parent.id, this.month.id-1, firstDay)).getDay();
-            const daysAfterLastDay = (6 - (new Date(this.month.parent.id, this.month.id-1, lastDay)).getDay());
-            for(let i=0; i<daysBeforeFirst; i++) {
-                this.days.push(null);
-            }
-            const hasChildren = !!this.month.children.length;
-            for(let i=0; i<lastDay; i++) {
-                this.days.push(hasChildren ? this.month.children[i] : null);
-            }
-            for(let i=0; i<daysAfterLastDay; i++) {
-                this.days.push(null);
-            }
-
-            // Get max snapshos in a day in entire year
         },
         methods: {
             getDayCountCircleStyle(snapshotCount) {
-                const size = Math.ceil((snapshotCount/this.month.parent.maxGrandchildSnapshotCount) * this.daySize);
+                const size = Math.ceil((snapshotCount/this.year.maxGrandchildSnapshotCount) * this.daySize);
                 const scaledSize = size ? (this.daySize*.3 + Math.ceil(size*.7)) : 0;
                 const margin = (this.daySize-scaledSize)/2;
 
                 // color hue should go form blue (240deg) to red (360deg)
-                const colorHue = Math.ceil((snapshotCount/this.month.parent.maxGrandchildSnapshotCount) * (360-240));
+                const colorHue = Math.ceil((snapshotCount/this.year.maxGrandchildSnapshotCount) * (360-240));
                 const scaledColorHue = size ? (240 + colorHue) : 240;
 
                 return `width: ${scaledSize}px; height: ${scaledSize}px; top: ${margin}px; left: ${margin}px; border-radius: ${scaledSize/2}px; background-color: hsl(${scaledColorHue}, 100%, 50%, .2)`;

@@ -127,9 +127,12 @@
                 this.nextPeriod = this.period.getNext();
 
                 // detect if going up level of period (new period type should be in old period parents)
-                if (oldPeriod.type > newPeriod.type) {
-                    let highlightPeriod = oldPeriod.getParents().filter(p => { return (p.type-1) === newPeriod.type; });
-                    this.highlightPeriod = highlightPeriod[0];
+                if (oldPeriod.type - newPeriod.type > 0) {
+                    let highlightPeriod = oldPeriod;
+                    for (let i=oldPeriod.type - newPeriod.type; i > 1; i--) {
+                        highlightPeriod = highlightPeriod.parent;
+                    }
+                    this.highlightPeriod = highlightPeriod;
                     setTimeout((function() {
                         this.highlightPeriod = null;
                     }).bind(this), 2000);

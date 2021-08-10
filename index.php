@@ -13,6 +13,7 @@
 <body>
 <?php echo file_get_contents('./components/timeline.html'); ?>
 <?php echo file_get_contents('./components/summary.html'); ?>
+<?php echo file_get_contents('./components/calendar-year.html'); ?>
 <?php echo file_get_contents('./components/calendar-month.html'); ?>
 
 <div id="app">
@@ -43,15 +44,10 @@
         <span class="full-view-toggle" @click="showFullView = !showFullView"><template v-if="!showFullView">&DownArrowBar;</template><template v-else>&UpArrowBar;</template></span>
     </div>
 
-    <div class="full-view" v-if="showFullView && currentPeriod && currentPeriod.type === 1">
-        Full View
-        <calendar-month
-                v-for="month in currentPeriod.children"
-                :key="month.id"
-                :month="month"
-                @goto-period="gotoPeriod"
-        ></calendar-month>
-    </div>
+    <calendar-year v-if="showFullView"
+              :period="currentPeriod"
+              @goto-period="gotoPeriod">
+    </calendar-year>
     <div class="iframe" v-if="currentSnapshot">
         <iframe :src="currentSnapshot.load_url"></iframe>
     </div>
@@ -148,13 +144,6 @@
         border: 1px solid gray;
         border-bottom-right-radius: 5px;
         border-bottom-left-radius: 5px;
-    }
-    .full-view {
-        position: absolute;
-        top: 150px;
-        left: 0;
-        height: 80vh;
-        width: 100%;
     }
 </style>
 </body>

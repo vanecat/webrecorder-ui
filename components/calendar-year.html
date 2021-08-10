@@ -1,0 +1,63 @@
+<style>
+    .full-view {
+        position: absolute;
+        top: 160px;
+        left: 0;
+        height: 80vh;
+        width: 100%;
+    }
+    .full-view .months {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .full-view h2 {
+        margin: 10px 0;
+        font-size: 20px;
+        text-align: center;
+    }
+</style>
+
+<script type="text/x-template" id="calendar-year">
+    <div class="full-view">
+        <h2>Snapshots in {{year.id}}</h2>
+        <div class="months">
+            <calendar-month
+                    v-for="month in year.children"
+                    :key="month.id"
+                    :month="month"
+                    :year="year"
+                    @goto-period="$emit('goto-period', $event)"
+            ></calendar-month>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    Pywb.vue.components['calendar-year'] = {
+        template: '#calendar-year',
+        props: ['period'],
+        data: function() {
+            return {};
+        },
+        computed: {
+            year() {
+                let year = null;
+                if (this.period.type === PywbPeriod.Type.all) {
+                    year = this.period.children[this.period.children.length-1];
+                } else if (this.period.type === PywbPeriod.Type.year) {
+                    year = this.period;
+                } else {
+                    year = this.period.getParents().filter(p => p.type === PywbPeriod.Type.year)[0];
+                }
+                if (year) {
+                    year.fillEmptyChildPeriods(true);
+                }
+                return year;
+            }
+        }
+    };
+</script>
+
