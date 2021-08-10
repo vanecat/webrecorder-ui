@@ -103,7 +103,7 @@
 <style>
     #app {
         border-bottom: 1px solid lightcoral;
-        /*height: 150px;*/
+        height: 150px;
         width: 100%;
     }
     .iframe iframe {
@@ -151,7 +151,7 @@
     }
     .full-view {
         position: absolute;
-        top: 120px;
+        top: 150px;
         left: 0;
         height: 80vh;
         width: 100%;
