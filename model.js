@@ -19,7 +19,8 @@ function PywbData(timeline, snapshots) {
     }
 }
 /* ---------------- SNAP SHOT object ----------------- */
-function PywbSnapshot(init) {
+function PywbSnapshot(init, index) {
+    this.index = index;
     this.year = parseInt(init.timestamp.substr(0, 4));
     this.month = parseInt(init.timestamp.substr(4, 2));
     this.day = parseInt(init.timestamp.substr(6, 2));
