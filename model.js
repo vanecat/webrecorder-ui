@@ -232,12 +232,14 @@ PywbPeriod.prototype.fillEmptyChildPeriods = function(isFillEmptyGrandChildrenPe
                     this.children.splice(i+1, 0, empty);
                 }
                 // manually push children (no need to reverse link parent
+                //empty.parent = this;
             }
             i++;
         } else {
             const empty = new PywbPeriod({type: this.type + 1, id: newId});
             this.children.push(empty);
             // manually push children (no need to reverse link parent
+            //empty.parent = this;
         }
     }
 
