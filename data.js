@@ -28,8 +28,8 @@ Pywb.makeData = (rawSnaps) => {
         }
         single.setSnapshot(snap);
         if (lastSingle) {
-            lastSingle.nextSnapshotPeriod = single;
-            single.previousSnapshotPeriod = lastSingle;
+            lastSingle.setNextSnapshotPeriod(single);
+            single.setPreviousSnapshotPeriod(lastSingle);
         }
         lastSingle = single;
 

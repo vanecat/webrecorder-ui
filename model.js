@@ -77,9 +77,15 @@ PywbPeriod.prototype.getChildById = function(id) {
 }
 
 // previous period (ONLY SET at the period level/type: snapshot)
-PywbPeriod.prototype.previousSnapshotPeriod = null;
+PywbPeriod.prototype.getPreviousSnapshotPeriod = () => {};
+PywbPeriod.prototype.setPreviousSnapshotPeriod = function(period) {
+    this.getPreviousSnapshotPeriod = () => period;
+};
 // next period (ONLY SET at the period level/type: snapshot)
-PywbPeriod.prototype.nextSnapshotPeriod = null;
+PywbPeriod.prototype.getNextSnapshotPeriod = () => {};
+PywbPeriod.prototype.setNextSnapshotPeriod = function(period) {
+    this.getNextSnapshotPeriod = () => period;
+};
 
 PywbPeriod.prototype.getFirstSnapshotPeriod = function() {
     return this.getFirstLastSnapshotPeriod_('first');
@@ -114,7 +120,7 @@ PywbPeriod.prototype.getPrevious = function() {
     if (!firstSnapshotPeriod) {
         return null;
     }
-    const previousSnapshotPeriod = firstSnapshotPeriod.previousSnapshotPeriod;
+    const previousSnapshotPeriod = firstSnapshotPeriod.getPreviousSnapshotPeriod();
     if (!previousSnapshotPeriod) {
         return null;
     }
@@ -135,7 +141,7 @@ PywbPeriod.prototype.getNext = function() {
     if (!lastSnapshotPeriod) {
         return null;
     }
-    const nextSnapshotPeriod = lastSnapshotPeriod.nextSnapshotPeriod;
+    const nextSnapshotPeriod = lastSnapshotPeriod.getNextSnapshotPeriod();
     if (!nextSnapshotPeriod) {
         return null;
     }
