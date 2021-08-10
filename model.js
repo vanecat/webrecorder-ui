@@ -7,7 +7,7 @@ function PywbData(timeline, snapshots) {
         if (index < 0 || index >= this.snapshots.length) {
             return null;
         }
-        this.snapshots[index];
+        return this.snapshots[index];
     }
     this.getPreviousSnapshot = function(snapshot) {
         const index = snapshot.index;
