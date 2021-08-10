@@ -18,7 +18,7 @@
 
 <div id="app">
     <div class="short-nav">
-        <div class="inner">
+        <div class="first-line">
             <div class="logo"><img src="/static/webarch-logo.png" /></div>
             <div class="url-and-timeline">
                 <div class="url">
@@ -35,13 +35,17 @@
                 ></timeline>
             </div>
         </div>
-        <timeline-summary
-                v-if="currentPeriod"
-                :period="currentPeriod"
-                :current-snapshot="currentSnapshot"
-                @goto-period="gotoPeriod"
-        ></timeline-summary>
-        <span class="full-view-toggle" @click="showFullView = !showFullView"><template v-if="!showFullView">&DownArrowBar;</template><template v-else>&UpArrowBar;</template></span>
+        <div class="second-line">
+            <timeline-summary
+                    v-if="currentPeriod"
+                    :period="currentPeriod"
+                    :current-snapshot="currentSnapshot"
+                    @goto-period="gotoPeriod"
+            ></timeline-summary>
+            <span class="full-view-toggle" :class="{expanded: showFullView}" @click="showFullView = !showFullView">
+                <template v-if="!showFullView">&DownArrowBar;</template><template v-else>&UpArrowBar;</template>
+            </span>
+        </div>
     </div>
 
     <calendar-year v-if="showFullView"
@@ -114,10 +118,15 @@
         width: 100%;
         position: relative;
     }
-    .short-nav .inner {
+    .short-nav .first-line {
         display: flex;
         justify-content: flex-start;
     }
+    .short-nav .second-line {
+        display: flex;
+        justify-content: flex-start;
+    }
+
     .short-nav .logo {
         flex-shrink: initial;
     }
@@ -136,14 +145,21 @@
     }
 
     .full-view-toggle {
-        position: absolute;
-        bottom: 0;
-        right: 50px;
-        width: 80px;
-        background-color: lightgray;
-        border: 1px solid gray;
-        border-bottom-right-radius: 5px;
-        border-bottom-left-radius: 5px;
+        margin-left: 10px;
+        padding-left: 30px;
+        background-image: url(/static/calendar-icon.png);
+        background-repeat: no-repeat;
+        background-position: 0 0;
+        background-size: 30px;
+        line-height: 30px;
+        cursor: zoom-in;
+    }
+    .full-view-toggle:hover {
+        background-color: #eeeeee;
+        border-radius: 5px;
+    }
+    .full-view-toggle.expanded {
+        cursor: zoom-out;
     }
 </style>
 </body>
