@@ -44,7 +44,7 @@
         });
 
         const before = parent.children.map(c => c.id).join(',');
-        const idRange = parent.fillEmptyPeriods();
+        const idRange = parent.fillEmptyChildPeriods();
         const after = parent.children.map(c => c.id).join(',');
 
         const controlIds = [];

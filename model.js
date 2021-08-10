@@ -115,18 +115,28 @@ PywbPeriod.prototype.getChildrenRange = function() {
     }
     return null;
 }
-PywbPeriod.prototype.fillEmptyPeriods = function() {
+PywbPeriod.prototype.fillEmptyChildPeriods = function(isFillEmptyGrandChildrenPeriods=false) {
     const idRange = this.getChildrenRange();
     if (!idRange) {
         return;
     }
+    if (this.hasFilledEmptyChildPeriods) {
+        this.hasFilledEmptyChildPeriods = true;
+        return;
+    }
+
     let i = 0;
     for (let newId = idRange[0]; newId <= idRange[1]; newId++) {
 
         if (i < this.children.length) {
             // if existing and new id match, skip, item already in place
+            if (this.children[i].id === newId) {
+                if (isFillEmptyGrandChildrenPeriods) {
+                    this.children[i].fillEmptyChildPeriods();
+                }
+            }
             // else
-            if (this.children[i].id !== newId) {
+            else if (this.children[i].id !== newId) {
                 const empty = new PywbPeriod({type: this.type + 1, id: newId})
                 if (newId < this.children[i].id) {
                     // insert new before existing

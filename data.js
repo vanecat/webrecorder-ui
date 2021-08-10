@@ -2,7 +2,6 @@ if (!window.Pywb) window.Pywb = {};
 Pywb.makeData = (rawSnaps) => {
     const all = new PywbPeriod({type: PywbPeriod.Type.all, id: 'all'});
     const linear = [];
-    let lastYear, lastMonth, lastDay, lastHour;
     rawSnaps.forEach(rawSnap => {
         const snap = new PywbSnapshot(rawSnap);
         let year, month, day, hour, single;
@@ -28,21 +27,7 @@ Pywb.makeData = (rawSnaps) => {
         }
         single.setSnapshot(snap);
         linear.push(snap);
-
-        if (lastYear && lastYear !== year) { lastYear.fillEmptyPeriods(); }
-        if (lastMonth && lastMonth !== month) { lastMonth.fillEmptyPeriods(); }
-        if (lastDay && lastDay !== day) { lastDay.fillEmptyPeriods(); }
-        if (lastHour && lastHour !== hour) { lastHour.fillEmptyPeriods(); }
-        lastYear = year; lastMonth = month; lastDay = day; lastHour = hour;
     });
-    // fill in the empty periods of the last period
-    if (lastYear) { lastYear.fillEmptyPeriods(); }
-    if (lastMonth) { lastMonth.fillEmptyPeriods(); }
-    if (lastDay) { lastDay.fillEmptyPeriods(); }
-    if (lastHour) { lastHour.fillEmptyPeriods(); }
-
-    // fill in top-level period empty child periods
-    all.fillEmptyPeriods();
 
     return {timeline: all, linear};
 };
