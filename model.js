@@ -249,18 +249,15 @@ PywbPeriod.prototype.fillEmptyChildPeriods = function(isFillEmptyGrandChildrenPe
     return idRange;
 }
 
-PywbPeriod.prototype.parents = null;
 PywbPeriod.prototype.getParents = function() {
-    if (!this.parents) {
-        this.parents = [];
-        let parent = this.parent;
-        while(parent) {
-            this.parents.push(parent);
-            parent = parent.parent;
-        }
-        this.parents = this.parents.reverse();
+    let parents = [];
+    let parent = this.parent;
+    while(parent) {
+        parents.push(parent);
+        parent = parent.parent;
     }
-    return this.parents;
+    parents = parents.reverse();
+    return parents;
 }
 
 PywbPeriod.prototype.snapshot = null;
