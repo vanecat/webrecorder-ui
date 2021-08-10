@@ -1,6 +1,6 @@
 <script type="text/x-template" id="timeline">
     <div class="timeline">
-        <div class="arrow previous" :class="{disabled: isScrollZero}" @click="scrollPrev" @dblclick.stop.prevent>&#x25C0;</div>
+        <div class="arrow previous" :class="{disabled: isScrollZero && !previousPeriod}" @click="scrollPrev" @dblclick.stop.prevent>&#x25C0;</div>
         <div class="scroll" ref="periodScroll">
             <div class="scroll-inner" ref="periods">
                 <div v-for="subPeriod in period.children"
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="arrow next" :class="{disabled: isScrollMax}" @click="scrollNext" @dblclick.stop.prevent>&#x25B6;</div>
+        <div class="arrow next" :class="{disabled: isScrollMax && !nextPeriod}" @click="scrollNext" @dblclick.stop.prevent>&#x25B6;</div>
     </div>
 </script>
 
@@ -47,6 +47,8 @@
                     [PywbPeriod.Type.snapshot]: 20 // snapshot box in hour/day
                 },
                 highlightPeriod: null,
+                previousPeriod: null,
+                nextPeriod: null,
                 isScrollZero: true,
                 isScrollMax: true,
             };
@@ -93,9 +95,8 @@
             },
             scrollNext: function () {
                 if (this.isScrollMax) {
-                    const next = this.period.getNext();
-                    if (next) {
-                        this.$emit('goto-period', next);
+                    if (this.nextPeriod) {
+                        this.$emit('goto-period', this.nextPeriod);
                     }
                 } else {
                     this.$refs.periodScroll.scrollLeft += 30;
@@ -120,13 +121,14 @@
             },
             changePeriod(period) {
                 if (period.snapshotCount) {
-                    if (period.snapshot) {
-                        this.$emit('goto-period', period);
-                    }
+                    this.$emit('goto-period', period);
                 }
             },
             onPeriodChanged(newPeriod, oldPeriod) {
                 this.addEmptySubPeriods();
+                this.previousPeriod = this.period.getPrevious();
+                this.nextPeriod = this.period.getNext();
+
                 // detect if going up level of period (new period type should be in old period parents)
                 if (oldPeriod.type - newPeriod.type > 0) {
                     let highlightPeriod = oldPeriod;
