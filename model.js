@@ -225,13 +225,13 @@ PywbPeriod.prototype.fillEmptyChildPeriods = function(isFillEmptyGrandChildrenPe
                     // insert new after existing
                     this.children.splice(i+1, 0, empty);
                 }
-                empty.parent = this;
+                // manually push children (no need to reverse link parent
             }
             i++;
         } else {
             const empty = new PywbPeriod({type: this.type + 1, id: newId});
             this.children.push(empty);
-            empty.parent = this;
+            // manually push children (no need to reverse link parent
         }
     }
 
