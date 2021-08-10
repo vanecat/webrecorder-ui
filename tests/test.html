@@ -26,11 +26,11 @@
             loadData() {
                 fetch('/sample-data/bbc-com.json').then(r => r.json()).then(data => this.onLoadData(data));
             },
-            onLoadData(data) {
+            onLoadData(data_) {
                 try {
-                    const {timeline, linear} = Pywb.makeData(data);
+                    const data = Pywb.makeData(data_);
                     this.addMsg('data loaded');
-                    this.addMsg(`${linear.length} records parsed`);
+                    this.addMsg(`${data.snapshots.length} records parsed`);
                 } catch(e) {
                     this.addMsg(e.message);
                 }

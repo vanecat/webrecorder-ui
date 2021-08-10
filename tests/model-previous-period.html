@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Data</title>
+    <script src="../model.js"></script>
+    <script src="../data.js"></script>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <div v-for="msg in msgs">{{msg}}</div>
+    <div v-if="current">current: {{current.id}} <input type="button" @click="getPrevious" value="previous"/></div>
+    <div v-if="previous">previous: {{previous.id}} </div>
+</div>
+<script>
+    function init(data_) {
+        new Vue({
+            el: '#app',
+            data: {
+                msgs: [],
+                current: null,
+                previous: null,
+                monthLabels: {1:'Jan', 2:'Feb',3:'Mar',4:'Apr',5:'May',6:'Jun',7:'Jul',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'}
+            },
+            mounted() {
+                try {
+                    const data = Pywb.makeData(data_);
+                    this.current = data.timeline.getChildById(2015).getChildById(10).getChildById(8);
+                } catch(e) {
+                    this.msgs.push(e.message);
+                }
+            },
+            methods: {
+                getPrevious() {
+                    if (!this.previous) {
+                        this.previous = this.current;
+                    }
+                    this.previous = this.previous.getPrevious();
+                }
+            }
+        });
+    }
+    fetch('/sample-data/bbc-com.json').then(r => r.json()).then(data => init(data));
+</script>
+</body>
+</html>

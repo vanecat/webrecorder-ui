@@ -38,7 +38,7 @@
 
 </div>
 <script>
-    function init(data) {
+    function init(data_) {
         new Vue({
             el: '#app',
             data: {
@@ -50,9 +50,9 @@
             },
             mounted() {
                 try {
-                    const {timeline, linear} = Pywb.makeData(data);
-                    this.snaps = linear;
-                    this.timeline = timeline;
+                    const data = Pywb.makeData(data_);
+                    this.snaps = data.snapshots;
+                    this.timeline = data.timeline;
                 } catch(e) {
                     this.msgs.push(e.message);
                 }

@@ -80,11 +80,11 @@
                 const url = `/sample-data/${this.url}.json?output=json&url=${encodeURIComponent(this.url)}`;
                 fetch(url, {mode: 'cors'}).then(r => r.json()).then(data => this.initData(data));
             },
-            initData(data) {
+            initData(data_) {
                 try {
-                    const {timeline, linear} = Pywb.makeData(data);
-                    this.snapshots = linear;
-                    this.currentPeriod = timeline;
+                    const data = Pywb.makeData(data_);
+                    this.snapshots = data.snapshots;
+                    this.currentPeriod = data.timeline;
                 } catch(e) {
                     this.msgs.push(e.message);
                 }

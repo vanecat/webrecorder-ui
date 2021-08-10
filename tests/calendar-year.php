@@ -29,10 +29,10 @@
             loadData() {
                 fetch('/sample-data/uk-gov.json').then(r => r.json()).then(data => this.onLoadData(data));
             },
-            onLoadData(data) {
+            onLoadData(data_) {
                 try {
-                    const {timeline, linear} = Pywb.makeData(data);
-                    this.year = timeline.getChildById(2020);
+                    const data = Pywb.makeData(data_);
+                    this.year = data.timeline.getChildById(2020);
                 } catch(e) {
                     this.addMsg(e.message);
                 }

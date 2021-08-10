@@ -1,13 +1,13 @@
 if (!window.Pywb) window.Pywb = {};
 Pywb.makeData = (rawSnaps) => {
-    const all = new PywbPeriod({type: PywbPeriod.Type.all, id: 'all'});
-    const linear = [];
+    const allTimePeriod = new PywbPeriod({type: PywbPeriod.Type.all, id: 'all'});
+    const snapshots = [];
     rawSnaps.forEach(rawSnap => {
         const snap = new PywbSnapshot(rawSnap);
         let year, month, day, hour, single;
-        if (!(year = all.getChildById(snap.year))) {
+        if (!(year = allTimePeriod.getChildById(snap.year))) {
             year = new PywbPeriod({type: PywbPeriod.Type.year, id: snap.year});
-            all.addChild(year);
+            allTimePeriod.addChild(year);
         }
         if (!(month = year.getChildById(snap.month))) {
             month = new PywbPeriod({type: PywbPeriod.Type.month, id: snap.month});
@@ -26,8 +26,8 @@ Pywb.makeData = (rawSnaps) => {
             hour.addChild(single);
         }
         single.setSnapshot(snap);
-        linear.push(snap);
+        snapshots.push(snap);
     });
 
-    return {timeline: all, linear};
+    return new PywbData(allTimePeriod, snapshots);
 };

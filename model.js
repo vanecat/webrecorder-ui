@@ -1,5 +1,23 @@
 const PywbMonthLabels = {1:'Jan', 2:'Feb',3:'Mar',4:'Apr',5:'May',6:'Jun',7:'Jul',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'};
 
+function PywbData(timeline, snapshots) {
+    this.timeline = timeline;
+    this.snapshots = snapshots;
+    this.getSnapshot = function(index) {
+        if (index < 0 || index >= this.snapshots.length) {
+            return null;
+        }
+        this.snapshots[index];
+    }
+    this.getPreviousSnapshot = function(snapshot) {
+        const index = snapshot.index;
+        return this.getSnapshot(index-1);
+    }
+    this.getNextSnapshot = function(snapshot) {
+        const index = snapshot.index;
+        return this.getSnapshot(index+1);
+    }
+}
 /* ---------------- SNAP SHOT object ----------------- */
 function PywbSnapshot(init) {
     this.year = parseInt(init.timestamp.substr(0, 4));
