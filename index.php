@@ -86,7 +86,7 @@
                     this.snapshots = data.snapshots;
                     this.currentPeriod = data.timeline;
                 } catch(e) {
-                    this.msgs.push(e.message);
+                    console.error(e.message);
                 }
             },
             gotoPeriod: function(newPeriod) {
