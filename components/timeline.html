@@ -122,8 +122,6 @@
             changePeriod(period) {
                 if (period.snapshotCount) {
                     if (period.snapshot) {
-                        this.$emit('goto-snapshot', period.snapshot);
-                    } else {
                         this.$emit('goto-period', period);
                     }
                 }

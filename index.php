@@ -91,9 +91,9 @@
             },
             gotoPeriod: function(newPeriod) {
                 this.currentPeriod = newPeriod;
-            },
-            gotoSnapshot(snapshot) {
-                this.currentSnapshot = snapshot;
+                if (newPeriod.snapshot) {
+                    this.currentSnapshot = newPeriod.snapshot;
+                }
             }
         }
     };
