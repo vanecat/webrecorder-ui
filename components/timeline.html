@@ -58,7 +58,7 @@
             this.$refs.periods._computedStyle = window.getComputedStyle(this.$refs.periods);
             this.$refs.periodScroll._computedStyle = window.getComputedStyle(this.$refs.periodScroll);
             this.$watch('period', this.onPeriodChanged);
-            this.adjustWidthAndScroll();
+            this.adjustScrollElWidth();
 
             this.$refs.periodScroll.addEventListener('scroll', this.updateScrollArrows);
             window.addEventListener('resize', this.updateScrollArrows);
@@ -123,15 +123,17 @@
                         highlightPeriod = highlightPeriod.parent;
                     }
                     this.highlightPeriod = highlightPeriod;
-                    const self = this;
-                    setTimeout(function() {
-                        self.highlightPeriod = null;
-                    }, 2000);
+                    setTimeout((function() {
+                        this.highlightPeriod = null;
+                    }).bind(this), 2000);
                 }
-                this.restoreScroll();
-                this.adjustWidthAndScroll();
+                setTimeout((function() {
+                    this.adjustScrollElWidth();
+                    this.restoreScroll();
+                    this.updateScrollArrows();
+                }).bind(this), 1);
             },
-            adjustWidthAndScroll() {
+            adjustScrollElWidth() {
                 this.$refs.periodScroll.style.maxWidth = this.$refs.periods._computedStyle.width;
             }
         }
