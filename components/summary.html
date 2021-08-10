@@ -3,14 +3,14 @@
         <template v-if="parents">
             <span v-for="parent in parents" :key="parent.id" class="item">
                 <span class="goto" @click="changePeriod(parent)">{{parent.getReadableId(true)}}</span>
-                <span class="count">{{parent.snapshotCount}}</span>
+                <span class="count">({{parent.snapshotCount}})</span> &gt;
             </span>
         </template>
         <span class="item">
             <span class="current">{{period.getReadableId(true)}}</span>
-            <span class="count">{{period.snapshotCount}}</span>
+            <span class="count">({{period.snapshotCount}} snapshot<span v-if="period.snapshotCount !== 1">s</span>)</span>
         </span>
-        <span class="item" v-if="currentSnapshot">{{currentSnapshot.getTimeFormatted()}}</span>
+        <span class="item snapshot" v-if="currentSnapshot">Current snapshot: {{currentSnapshot.getFullReadableId()}}</span>
     </div>
 </script>
 
@@ -41,39 +41,39 @@
 </script>
 
 <style>
-    .summary .count {
-        position: relative;
-        display: inline-block;
-        width: auto;
-        top: -5px;
-        padding: 1px;
-        border-radius: 5px;
-        background-color: rgb(200,200,200);
-        font-size: 14px;
+    .summary {
+        margin-left: 210px;
     }
 
     .summary .item {
-        font-size: 20px;
-        display: block;
+        position: relative;
+        display: inline;
         margin: 0 2px 0 0;
+        font-size: 28px;
     }
+    .summary .count {
+        vertical-align: middle;
+        font-size: 14px;
+        line-height: 28px;
+    }
+    .summary .count .verbose {
+        display: none;
+    }
+    .summary .count:hover .verbose {
+        display: inline;
+    }
+
     .summary .item .goto {
         margin: 1px;
         cursor: pointer;
-        background-color: #a6cdf5;
-        border-radius: 5px;
+        color: darkslateblue;
+        text-decoration: underline;
      }
-    .summary .item .goto:before {
-        content: "\2196";
-    }
     .summary .item .goto:hover {
         background-color: #a6cdf5;
     }
-    .summary .item .current {
-        font-size: 24px;
-    }
-    .summary .item .current:before {
-        content: "\21A0";
+    .summary .item.snapshot {
+        display: block;
     }
 
 </style>
