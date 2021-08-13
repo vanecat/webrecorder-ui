@@ -22,11 +22,10 @@
             <div class="logo"><img src="/static/webarch-logo.png" /></div>
             <div class="url-and-timeline">
                 <div class="url">
-                    <select v-model="url">
+                    <select v-model="url" @change="loadUrl">
                         <option>url</option>
                         <option v-for="sample in sampleData" :value="sample">{{sample}}</option>
                     </select>
-                    <span class="go-btn" @click="loadUrl">Load snapshots &RightArrowBar;</span>
                 </div>
                 <timeline
                         v-if="currentPeriod"
@@ -43,7 +42,7 @@
                     @goto-period="gotoPeriod"
             ></timeline-summary>
             <span class="full-view-toggle" :class="{expanded: showFullView}" @click="showFullView = !showFullView">
-                <template v-if="!showFullView">&DownArrowBar; <span class="detail">show year calendar</span></template><template v-else>&UpArrowBar; <span class="detail">hide year calendar</span></template>
+                <template v-if="!showFullView"><span class="detail">show year calendar</span></template><template v-else><span class="detail">hide year calendar</span></template>
             </span>
         </div>
     </div>
