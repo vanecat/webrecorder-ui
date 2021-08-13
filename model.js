@@ -1,7 +1,45 @@
 const PywbMonthLabels = {1:'Jan', 2:'Feb',3:'Mar',4:'Apr',5:'May',6:'Jun',7:'Jul',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'};
 
-function PywbData(timeline, snapshots) {
-    this.timeline = timeline;
+function PywbData(rawSnaps) {
+    const allTimePeriod = new PywbPeriod({type: PywbPeriod.Type.all, id: 'all'});
+    const snapshots = [];
+    let lastSingle = null;
+    rawSnaps.forEach((rawSnap, i) => {
+        const snap = new PywbSnapshot(rawSnap, i);
+        let year, month, day, hour, single;
+        if (!(year = allTimePeriod.getChildById(snap.year))) {
+            year = new PywbPeriod({type: PywbPeriod.Type.year, id: snap.year});
+            allTimePeriod.addChild(year);
+        }
+        if (!(month = year.getChildById(snap.month))) {
+            month = new PywbPeriod({type: PywbPeriod.Type.month, id: snap.month});
+            year.addChild(month);
+        }
+        if (!(day = month.getChildById(snap.day))) {
+            day = new PywbPeriod({type: PywbPeriod.Type.day, id: snap.day});
+            month.addChild(day);
+        }
+        //const hourValue = Math.ceil((snap.hour + .0001) / (24/8)); // divide day in 4 six-hour periods (aka quarters)
+        const hourValue = snap.hour;
+        if (!(hour = day.getChildById(hourValue))) {
+            hour = new PywbPeriod({type: PywbPeriod.Type.hour, id: hourValue});
+            day.addChild(hour);
+        }
+        if (!(single = hour.getChildById(snap.id))) {
+            single = new PywbPeriod({type: PywbPeriod.Type.snapshot, id: snap.id});
+            hour.addChild(single);
+        }
+        single.setSnapshot(snap);
+        if (lastSingle) {
+            lastSingle.setNextSnapshotPeriod(single);
+            single.setPreviousSnapshotPeriod(lastSingle);
+        }
+        lastSingle = single;
+
+        snapshots.push(snap);
+    });
+
+    this.timeline = allTimePeriod;
     this.snapshots = snapshots;
     this.getSnapshot = function(index) {
         if (index < 0 || index >= this.snapshots.length) {

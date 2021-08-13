@@ -31,7 +31,7 @@
             },
             onLoadData(data_) {
                 try {
-                    const data = Pywb.makeData(data_);
+                    const data = new PywbData(data_);
                     this.year = data.timeline.getChildById(2020);
                 } catch(e) {
                     this.addMsg(e.message);

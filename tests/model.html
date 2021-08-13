@@ -50,7 +50,7 @@
             },
             mounted() {
                 try {
-                    const data = Pywb.makeData(data_);
+                    const data = new PywbData(data_);
                     this.snaps = data.snapshots;
                     this.timeline = data.timeline;
                 } catch(e) {

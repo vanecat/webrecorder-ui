@@ -27,7 +27,7 @@
             },
             mounted() {
                 try {
-                    const data = Pywb.makeData(data_);
+                    const data = new PywbData(data_);
                     this.current = data.timeline.getChildById(2015).getChildById(1).getChildById(1);
                 } catch(e) {
                     this.msgs.push(e.message);

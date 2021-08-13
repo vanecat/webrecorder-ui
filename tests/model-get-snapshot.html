@@ -24,7 +24,7 @@
             },
             mounted() {
                 try {
-                    this.data = Pywb.makeData(data_);
+                    const data = new PywbData(data_);
                 } catch(e) {
                     this.msgs.push(e.message);
                 }

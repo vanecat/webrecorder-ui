@@ -81,7 +81,7 @@
             },
             initData(data_) {
                 try {
-                    const data = Pywb.makeData(data_);
+                    const data = new PywbData(data_);
                     this.snapshots = data.snapshots;
                     this.currentPeriod = data.timeline;
                 } catch(e) {

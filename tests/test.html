@@ -28,7 +28,7 @@
             },
             onLoadData(data_) {
                 try {
-                    const data = Pywb.makeData(data_);
+                    const data = new PywbData(data_);
                     this.addMsg('data loaded');
                     this.addMsg(`${data.snapshots.length} records parsed`);
                 } catch(e) {
