@@ -289,7 +289,7 @@ PywbPeriod.prototype.fillEmptyChildPeriods = function(isFillEmptyGrandChildrenPe
     return idRange;
 }
 
-PywbPeriod.prototype.getParents = function() {
+PywbPeriod.prototype.getParents = function(skipAllTime=false) {
     let parents = [];
     let parent = this.parent;
     while(parent) {
@@ -297,6 +297,9 @@ PywbPeriod.prototype.getParents = function() {
         parent = parent.parent;
     }
     parents = parents.reverse();
+    if (skipAllTime) {
+        parents.shift(); // skip first "all-time"
+    }
     return parents;
 }
 
@@ -319,7 +322,8 @@ PywbPeriod.prototype.setSnapshot = function(snap) {
 };
 
 PywbPeriod.prototype.getFullReadableId = function(hasDayCardinalSuffix) {
-    return this.getParents().map(p => p.getReadableId()).join(' ') + this.getReadableId();
+    // remove "all-time" from parents (getParents(true) when printing readable id (of all parents and currrent
+    return this.getParents(true).map(p => p.getReadableId(hasDayCardinalSuffix)).join(' ') + ' ' + this.getReadableId(hasDayCardinalSuffix);
 }
 PywbPeriod.prototype.getReadableId = function(hasDayCardinalSuffix) {
     switch (this.type) {
