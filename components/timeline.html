@@ -2,19 +2,22 @@
     <div class="timeline">
         <div class="arrow previous" :class="{disabled: isScrollZero && !previousPeriod}" @click="scrollPrev" @dblclick.stop.prevent>&#x25C0;</div>
         <div class="scroll" ref="periodScroll">
-            <div class="scroll-inner" ref="periods">
+            <div class="periods" ref="periods">
                 <div v-for="subPeriod in period.children"
                      :key="subPeriod.id"
                      class="period"
-                     :class="{empty: !subPeriod.snapshotCount, highlight: highlightPeriod === subPeriod}"
-                     :style="{width: subPeriodBoxWidth+'px'}"
+                     :class="{empty: !subPeriod.snapshotCount, highlight: highlightPeriod === subPeriod, 'last-level': isLastZoomLevel}"
                      v-on:click="changePeriod(subPeriod)">
                     <div class="histo">
-                        <div class="count" v-if="!subPeriod.snapshot"><span class="count-inner">{{subPeriod.snapshotCount}}</span></div>
+                        <div class="count" v-if="!subPeriod.snapshot && !isLastZoomLevel"><span class="count-inner">{{subPeriod.snapshotCount}}</span></div>
                         <div class="line"
                              v-for="histoPeriod in subPeriod.children"
                              :key="histoPeriod.id"
-                             :style="{height: getHistoLineHeight(histoPeriod.snapshotCount), width: (subPeriodBoxWidth/subPeriod.children.length)+'px'}"></div>
+                             :style="{height: getHistoLineHeight(histoPeriod.snapshotCount)}"
+                             v-on:click="changePeriodFromHistogram(histoPeriod)"
+                        >
+                            <div class="snap-info" v-if="isLastZoomLevel">{{histoPeriod.snapshot.getTimeDateFormatted()}}</div>
+                        </div>
                     </div>
                     <div class="inner">
                         <div class="label">{{subPeriod.getReadableId()}}</div>
@@ -32,13 +35,15 @@
         template: '#timeline',
         data: function() {
             return {
+                // TODO: remove widths (now using flex css for width calculation)
                 subPeriodBoxWidths: {// in pixels
                     [PywbPeriod.Type.year]: 80, // year box
                     [PywbPeriod.Type.month]: 80, // month box in year
                     [PywbPeriod.Type.day]: 20, // days box in month
-                    [PywbPeriod.Type.hour]: 100, // hour box in day
-                    [PywbPeriod.Type.snapshot]: 20 // snapshot box in hour/day
+                    [PywbPeriod.Type.hour]: 60, // hour box in day
+                    [PywbPeriod.Type.snapshot]: 10 // snapshot box in hour/day
                 },
+                // TODO: remove widths (now using flex css for width calculation)
                 emptySubPeriodBoxWidths: {// in pixels
                     [PywbPeriod.Type.year]: 40, // year box
                     [PywbPeriod.Type.month]: 40, // month box in year
@@ -60,7 +65,8 @@
             this.$refs.periods._computedStyle = window.getComputedStyle(this.$refs.periods);
             this.$refs.periodScroll._computedStyle = window.getComputedStyle(this.$refs.periodScroll);
             this.$watch('period', this.onPeriodChanged);
-            this.adjustScrollElWidth();
+            // TODO: remove widths (now using flex css for width calculation), so we don't need manual calc
+            //this.adjustScrollElWidth();
 
             this.$refs.periodScroll.addEventListener('scroll', this.updateScrollArrows);
             window.addEventListener('resize', this.updateScrollArrows);
@@ -70,8 +76,13 @@
             subPeriodBoxWidth: function() {
                 return this.subPeriodBoxWidths[this.period.type+1]; // the type of the period children
             },
+            // TODO: remove widths (now using flex css for width calculation)
             emptySubPeriodBoxWidth: function() {
                 return this.emptySubPeriodBoxWidths[this.period.type+1]; // the type of the period children
+            },
+            // this determins which the last zoom level is before we go straight to showing snapshot
+            isLastZoomLevel() {
+                return this.period.type === PywbPeriod.Type.day;
             }
         },
         updated() {
@@ -118,6 +129,18 @@
             },
             changePeriod(period) {
                 if (period.snapshotCount) {
+                    if (this.isLastZoomLevel) {
+                        if (period.type === PywbPeriod.Type.snapshot) {
+                            this.$emit('goto-period', period);
+                        }
+                    } else {
+                        this.$emit('goto-period', period);
+                    }
+                }
+            },
+            // special "change period" from histogram lines
+            changePeriodFromHistogram(period) {
+                if (this.isLastZoomLevel && period.type === PywbPeriod.Type.snapshot) {
                     this.$emit('goto-period', period);
                 }
             },
@@ -138,13 +161,15 @@
                     }).bind(this), 2000);
                 }
                 setTimeout((function() {
-                    this.adjustScrollElWidth();
+                    // TODO: remove widths (now using flex css for width calculation), so we don't need manual calc
+                    //this.adjustScrollElWidth();
                     this.restoreScroll();
                     this.updateScrollArrows();
                 }).bind(this), 1);
             },
+            // TODO: remove widths (now using flex css for width calculation), so we don't need manual calc
             adjustScrollElWidth() {
-                this.$refs.periodScroll.style.maxWidth = this.$refs.periods._computedStyle.width;
+                //this.$refs.periodScroll.style.maxWidth = this.$refs.periods._computedStyle.width;
             }
         }
     };
@@ -205,14 +230,17 @@
     .timeline .scroll::-webkit-scrollbar {
         display: none;
     }
-    .timeline .scroll .scroll-inner {
-        display: inline-block;
+    .timeline .scroll .periods {
+        display: flex;
+        justify-content: space-between;
         height: 100%;
-        width: auto;
+        width: 100%;
+        min-width: 600px;
     }
 
 
     .timeline .period {
+        flex-grow: 1;
         position: relative;
         display: inline-block;
         height: 100%;
@@ -228,7 +256,7 @@
     }
     /* 1st period period child el */
     .timeline .period:nth-child(1) {
-        border-left: 1px solid white; /* has left border; all other periods have right border */
+        /*border-left: 1px solid white; !* has left border; all other periods have right border *!*/
     }
 
     .timeline .period:hover {
@@ -243,7 +271,6 @@
     /* highlighted period */
     .timeline .period.highlight {
         background-color: cyan;
-        transition: background-color 500ms ease-in-out;
     }
 
     .timeline .period .label {
@@ -282,6 +309,9 @@
         background-color: white;
         border-top: 1px solid gray;
     }
+    .timeline .period.last-level .inner {
+        text-align: left;
+    }
 
     .timeline .period .histo {
         display: flex;
@@ -291,14 +321,52 @@
         width: 100%;
         height: 60px;
         align-items: flex-end;
+        justify-content: space-between;
         text-align: left;
     }
+
     .timeline .period .histo .line {
+        flex-grow: 1;
         display: inline-block;
-        height: 100%;
         background-color: #a6cdf5;
         margin: 0;
         padding: 0;
     }
+
+    /* Last level period histogram spaces things evenly */
+    .timeline .period.last-level .histo {
+        justify-content: space-around;
+    }
+
+    /* Last level period histogram lines do not grow, but are fixed width/margin */
+    .timeline .period.last-level .histo .line {
+        flex-grow: unset;
+        width: 5px;
+        margin-left: 2px;
+
+        position: relative;
+    }
+
+        /* update line color on hover*/
+        .timeline .period.last-level .histo .line:hover {
+            background-color: #f5a6eb;
+        }
+
+        /*Last level period histogram line has extra info*/
+        .timeline .period.last-level  .histo .line .snap-info {
+            position: absolute;
+            z-index: 10;
+            top: 30%;
+            left: 120%;
+            display: none;
+            background-color: white;
+            border: 1px solid gray;
+            padding: 2px;
+            white-space: nowrap; /*no wrapping allowed*/
+        }
+            /*show on hover*/
+            .timeline .period.last-level .histo .line:hover .snap-info {
+                display: block;
+            }
 
 </style>
