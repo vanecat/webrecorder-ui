@@ -1,16 +1,19 @@
 <script type="text/x-template" id="timeline-summary">
     <div class="summary">
-        <template v-if="parents">
-            <span v-for="parent in parents" :key="parent.id" class="item">
+        <template v-if="parents.length">
+            <span class="item">
+                <span class="goto" @click="changePeriod(parents[0])">{{parents[0].getReadableId(true)}}</span>
+            </span>
+            <span class="count">({{parents[0].snapshotCount}})</span>
+            &gt;
+            <span v-for="(parent,i) in parents" :key="parent.id" class="item" v-if="i > 0">
                 <span class="goto" @click="changePeriod(parent)">{{parent.getReadableId(true)}}</span>
-                <span class="count">({{parent.snapshotCount}})</span> &gt;
             </span>
         </template>
         <span class="item">
             <span class="current">{{period.getReadableId(true)}}</span>
             <span class="count">({{period.snapshotCount}} snapshot<span v-if="period.snapshotCount !== 1">s</span>)</span>
         </span>
-        <span class="item snapshot" v-if="currentSnapshot">Current snapshot: {{currentSnapshot.getFullReadableId()}}</span>
     </div>
 </script>
 
@@ -19,9 +22,6 @@
         props: {
             period: {
                 required: true
-            },
-            currentSnapshot: {
-                required: false
             }
         },
         template: '#timeline-summary',
