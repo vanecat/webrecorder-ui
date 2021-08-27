@@ -19,8 +19,8 @@ function PywbData(rawSnaps) {
             day = new PywbPeriod({type: PywbPeriod.Type.day, id: snap.day});
             month.addChild(day);
         }
-        //const hourValue = Math.ceil((snap.hour + .0001) / (24/8)); // divide day in 4 six-hour periods (aka quarters)
-        const hourValue = snap.hour;
+        const hourValue = Math.ceil((snap.hour + .0001) / (24/8)); // divide day in 4 six-hour periods (aka quarters)
+        //const hourValue = snap.hour;
         if (!(hour = day.getChildById(hourValue))) {
             hour = new PywbPeriod({type: PywbPeriod.Type.hour, id: hourValue});
             day.addChild(hour);
@@ -222,7 +222,8 @@ PywbPeriod.prototype.getChildrenRange = function() {
             return [1, lastDateInMonth];
         case PywbPeriod.Type.day:
             // hours: 0 to 23
-            return [0,23];
+            // return [1,4];
+            return [1,8];
     }
     return null;
 }
@@ -343,7 +344,9 @@ PywbPeriod.prototype.getReadableId = function(hasDayCardinalSuffix) {
             }
             return this.id + suffix;
         case PywbPeriod.Type.hour:
-            return (this.id < 13 ? this.id : this.id % 12) + ' ' + (this.id < 12 ? 'am':'pm');
+            return ({1:'12 am', 2: '3 am', 3: '6 am', 4: '9 am', 5: 'noon', 6: '3 pm', 7: '6 pm', 8: '9 pm'})[this.id];
+            //return ({1:'midnight', 2: '6 am', 3: 'noon', 4: '6 pm'})[this.id];
+            //return (this.id < 13 ? this.id : this.id % 12) + ' ' + (this.id < 12 ? 'am':'pm');
         case PywbPeriod.Type.snapshot:
             return this.snapshot.getTimeFormatted();
     }
