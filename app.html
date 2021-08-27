@@ -70,9 +70,11 @@
         }
       },
       gotoPeriod: function(newPeriod) {
-        this.currentPeriod = newPeriod;
         if (newPeriod.snapshot) {
+          // if single-snapshot period, just go to snapshot (do not change timeline period)
           this.currentSnapshot = newPeriod.snapshot;
+        } else {
+          this.currentPeriod = newPeriod;
         }
       }
     }
