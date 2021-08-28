@@ -3,3 +3,4 @@ vue*.js
 sample-data/
 static/
 _notes/
+.user.ini
