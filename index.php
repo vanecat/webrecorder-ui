@@ -15,5 +15,6 @@
 <?php echo file_get_contents('./components/calendar-year.html'); ?>
 <?php echo file_get_contents('./components/calendar-month.html'); ?>
 <?php echo file_get_contents('./app.html'); ?>
+<script>Pywb.init();</script>
 </body>
 </html>

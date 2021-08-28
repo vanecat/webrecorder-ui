@@ -73,13 +73,13 @@
         if (newPeriod.snapshot) {
           // if single-snapshot period, just go to snapshot (do not change timeline period)
           this.currentSnapshot = newPeriod.snapshot;
+          // COMMUNICATE TO ContentFrame
         } else {
           this.currentPeriod = newPeriod;
         }
       }
     }
   };
-  Pywb.init();
 </script>
 
 <style>
