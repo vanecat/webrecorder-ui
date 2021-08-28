@@ -62,7 +62,7 @@
     }
 </style>
 
-<script type="text/x-template" id="calendar-month">
+<div data-template="calendar-month">
     <div class="calendar-month">
         <h3>{{month.getReadableId()}}</h3>
         <div v-if="month.snapshotCount">
@@ -71,9 +71,9 @@
         </div>
         <div v-else class="empty">no snapshots</div>
     </div>
-</script>
+</div>
 
-<script type="text/javascript">
+<script>
     Pywb.vue.components['calendar-month'] = {
         template: '#calendar-month',
         props: ['month', 'year'],

@@ -20,7 +20,7 @@
     }
 </style>
 
-<script type="text/x-template" id="calendar-year">
+<div date-template="calendar-year">
     <div class="full-view">
         <h2>Snapshots in {{year.id}}</h2>
         <div class="months">
@@ -33,9 +33,9 @@
             ></calendar-month>
         </div>
     </div>
-</script>
+</div>
 
-<script type="text/javascript">
+<script>
     Pywb.vue.components['calendar-year'] = {
         template: '#calendar-year',
         props: ['period'],

@@ -1,4 +1,4 @@
-<script type="text/x-template" id="timeline">
+<div data-template="timeline">
     <div class="timeline">
         <div class="arrow previous" :class="{disabled: isScrollZero && !previousPeriod}" @click="scrollPrev" @dblclick.stop.prevent>&#x25C0;</div>
         <div class="scroll" ref="periodScroll">
@@ -27,9 +27,9 @@
         </div>
         <div class="arrow next" :class="{disabled: isScrollMax && !nextPeriod}" @click="scrollNext" @dblclick.stop.prevent>&#x25B6;</div>
     </div>
-</script>
+</div>
 
-<script type="text/javascript">
+<script>
     Pywb.vue.components['timeline'] = {
         props: ['period'],
         template: '#timeline',

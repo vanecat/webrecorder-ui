@@ -1,4 +1,4 @@
-<script type="text/x-template" id="timeline-summary">
+<div data-template="timeline-summary">
     <div class="summary">
         <template v-if="parents.length">
             <span class="item">
@@ -15,9 +15,9 @@
             <span class="count">({{period.snapshotCount}} snapshot<span v-if="period.snapshotCount !== 1">s</span>)</span>
         </span>
     </div>
-</script>
+</div>
 
-<script type="text/javascript">
+<script>
     Pywb.vue.components['timeline-summary'] = {
         props: {
             period: {
