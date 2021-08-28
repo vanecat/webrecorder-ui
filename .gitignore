@@ -5,3 +5,4 @@ static/
 _notes/
 .user.ini
 error_log
+dist/
