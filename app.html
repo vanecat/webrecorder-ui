@@ -1,4 +1,4 @@
-<div id="app">
+<div data-app="webrecorder-replay-app">
   <div class="short-nav">
     <div class="first-line">
       <div class="logo"><img src="/static/webarch-logo.png" /></div>
@@ -38,7 +38,7 @@
 </div>
 <script>
   Pywb.vue.app = {
-    el: '#app',
+    el: '[data-app="webrecorder-replay-app"]',
     data: {
       url: '',
       snapshots: [],

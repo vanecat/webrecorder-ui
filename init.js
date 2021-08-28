@@ -1,7 +1,7 @@
 const Pywb = {
     data: {},
     vue: {app:{}, components:{}},
-    init: () => {
+    init: (config) => {
         // components templates
         document.querySelectorAll('[data-template]').forEach((item) => {
             Pywb.vue.components[item.dataset.template].template = item.innerHTML;

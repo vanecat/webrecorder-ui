@@ -10,11 +10,11 @@
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
 </head>
 <body>
-<?php echo file_get_contents('./components/timeline.html'); ?>
-<?php echo file_get_contents('./components/summary.html'); ?>
-<?php echo file_get_contents('./components/calendar-year.html'); ?>
-<?php echo file_get_contents('./components/calendar-month.html'); ?>
-<?php echo file_get_contents('./app.html'); ?>
-<script>Pywb.init();</script>
+<?php require_once('./components/timeline.html'); ?>
+<?php require_once('./components/summary.html'); ?>
+<?php require_once('./components/calendar-year.html'); ?>
+<?php require_once('./components/calendar-month.html'); ?>
+<?php require_once('./app.html'); ?>
+<script>Pywb.init({});</script>
 </body>
 </html>
