@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@UKWebArchive">
+    <meta name="og:site" content="UK Web Archive">
+    <meta name="og:title" content="Archived version of https://www.gov.uk/ from 2014">
+    <meta name="og:description" content="Archived version of https://www.gov.uk/ as of 23:12, 18/02/2014 (UTC). Preserved by the UK Web Archive.">
+    <!-- Twitter summary_large_image uses a 2:1 aspect ratio -->
+    <meta name="og:image" content="https://www.webarchive.org.uk/api/iiif/2/urn:pwid:webarchive.org.uk:2014:02:18T23:12:42Z:page:https%3A%2F%2Fwww.gov.uk%2F/0,0,1024,512/600,/0/default.png">
+    <style>
+        html, body
+        {
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+            border: 0px;
+            overflow: hidden;
+        }
+        #_wb_browser_warning {
+            position: fixed;
+            top: 54px;
+            left: 10px;
+            width: 300px;
+            padding: 15px;
+            z-index: 2147483643;
+            border: solid 2px red;
+            background-color: #FFF;
+        }
+
+    </style>
+    <script src='/integration/static/wb_frame.js'> </script>
+
+
+
+
+
+    <!-- default banner, create through js -->
+    <script src='/integration/static/default_banner.js'> </script>
+    <link rel='stylesheet' href='/integration/static/default_banner.css'/>
+    <script>
+        window.banner_info = {
+            is_gmt: false,
+            logoImg: "/integration/static/ukwa-2018-w-sml.png",
+
+            liveMsg: decodeURIComponent("Live On"),
+
+            calendarAlt: decodeURIComponent("Calendar icon"),
+            calendarLabel: decodeURIComponent("Back to Calendar"),
+            choiceLabel: decodeURIComponent("Language:"),
+            loadingLabel: decodeURIComponent("Loading..."),
+            logoAlt: decodeURIComponent("UK Web Archive Logo"),
+
+            locale: "en",
+            curr_locale: "en",
+            locales: ['en', 'cy'],
+            locale_prefixes: {"en":"https://www.webarchive.org.uk/wayback/en/archive/","cy":"https://www.webarchive.org.uk/wayback/cy/archive/"},
+            prefix: "https://www.webarchive.org.uk/wayback/en/archive/",
+            staticPrefix: "http://webarchive:8888/integration/static"
+        };
+            window.activeUrl = "https://www.gov.uk/";
+    </script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-7571526-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-7571526-1');
+    </script>
+
+
+</head>
+<body style="margin: 0px; padding: 0px;">
+<div id="wb_iframe_div">
+    <iframe id="replay_iframe" frameborder="0" seamless="seamless" scrolling="yes" class="wb_iframe"></iframe>
+</div>
+<script>
+    var cframe = new ContentFrame({"url": "https://www.gov.uk/" + window.location.hash,
+        "prefix": "https://www.webarchive.org.uk/wayback/en/archive/",
+        "request_ts": "20140218231242",
+        "iframe": "#replay_iframe"});
+
+    function addBrowserWarning() {
+        var _wb_warning = document.createElement("div");
+        _wb_warning.setAttribute("id", "_wb_browser_warning");
+        _wb_warning.innerHTML = decodeURIComponent("You are using a browser that is out of date and is not supported for this site. Certain portions of this site may not work correctly. Please try to upgrade or use another browser.");
+        setTimeout(function (){ document.getElementById("_wb_browser_warning").style.display = "none"; }, 15000);
+        document.body.appendChild(_wb_warning);
+    }
+
+    if (window.navigator.userAgent.indexOf("IE 10") !== -1) {
+        addBrowserWarning();
+    }
+</script>
+<!--[if lte IE 9]>
+<script type="text/javascript">addBrowserWarning();</script>
+<![endif]-->
+</body>
+</html>

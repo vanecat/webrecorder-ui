@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8;charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Search Results
+    </title>
+
+    <!-- jquery and bootstrap dependencies query view -->
+    <link rel="stylesheet" href="/integration/static/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/integration/static/font-awesome.min.css">
+
+    <script src="/integration/static/jquery-latest.min.js"></script>
+    <script src="/integration/static/bootstrap.min.js"></script>
+
+    <title>UKWA Pywb Access System</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/integration/static/images/favicon.png">
+    <link rel="stylesheet" type="text/css" href="/integration/static/base.css">
+    <script src="/integration/static/base.js"> </script>
+
+    <link rel="stylesheet" href="/integration/static/query.css">
+    <script src="/integration/static/url-polyfill.min.js"></script>
+    <script src="/integration/static/query.js"></script>
+</head>
+
+<body>
+<header>
+    <a href="/wayback/en/" class="logo">
+        <img src="/integration/static/ukwa-2018-w-med.png" width="200" height="122" alt="UK Web Archive logo">
+    </a>
+    <div class="language-select">
+        Language:
+        <ul role="listbox" aria-activedescendant="en" aria-labelledby="Language select">
+            <li role="option" id="en"><a href="/wayback/en/archive/*/https://www.gov.uk/">en</a></li>
+            <li role="option" id="cy"><a href="/wayback/cy/archive/*/https://www.gov.uk/">cy</a></li>
+        </ul>
+    </div>
+</header>
+
+<section>
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <h4 class="display-4 text-center text-sm-left p-0">Search Results</h4>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row justify-content-center text-center text-sm-left mt-1" id="display-query-type-info"></div>
+    </div>
+    <div class="container mt-3 q-display" id="captures"></div>
+    <script>
+        var text = {
+            months: {
+                '01': "January",
+                '02': "February",
+                '03': "March",
+                '04': "April",
+                '05': "May",
+                '06': "June",
+                '07': "July",
+                '08': "August",
+                '09': "September",
+                '10': "October",
+                '11': "November",
+                '12': "December",
+            },
+            version: "capture",
+            versions: "captures",
+            result: "result",
+            results: "results",
+            viewAllCaptures: "View All Captures",
+            dateTime: "Date Time: ",
+        };
+
+        var renderCal = new RenderCalendar({ prefix: "/integration/en/archive/", staticPrefix: "/integration/static", text: text });
+        renderCal.init();
+    </script>
+</section>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-7571526-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-7571526-1');
+</script>
+
+</body>
+</html>

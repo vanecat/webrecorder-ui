@@ -1,0 +1,7 @@
+RewriteEngine ON
+
+RewriteRule ^(\w\w)/archive/cdx$ /integration/cdx.php [L,P]
+
+RewriteRule ^(\w\w)/archive/\*/.*$ /integration/query.html [L,P]
+RewriteRule ^(\w\w)/archive/[0-9]+/.*$ /integration/frame_insert.html [L,P]
+
