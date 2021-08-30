@@ -3,12 +3,7 @@
     <div class="first-line">
       <div class="logo"><img src="/static/webarch-logo.png" /></div>
       <div class="url-and-timeline">
-        <div class="url">
-          <select v-model="url" @change="loadUrl">
-            <option>url</option>
-            <option v-for="sample in sampleData" :value="sample">{{sample}}</option>
-          </select>
-        </div>
+        <div class="url"></div>
         <timeline
                 v-if="currentPeriod"
                 :period="currentPeriod"
@@ -40,7 +35,6 @@
   PywbVue.addAppConfig({
     el: '[data-app="webrecorder-replay-app"]',
     data: {
-      url: '',
       snapshots: [],
       currentPeriod: null,
       currentSnapshot: null,
@@ -49,17 +43,9 @@
       showFullView: false
     },
     mounted: function() {
-      // DEVELOPMENT ONLY (TODO: remove when deploying app)
-      // make initial sample data appear on "mounted" (faster for development)
-      this.url = this.sampleData[0];
-      this.loadUrl();
+      this.$on('data-loaded', this.initData);
     },
     methods: {
-      loadUrl() {
-        // https://www.webarchive.org.uk/wayback/en/archive/cdx?
-        const url = `/sample-data/${this.url}.json?output=json&url=${encodeURIComponent(this.url)}`;
-        fetch(url, {mode: 'cors'}).then(r => r.json()).then(data => this.initData(data));
-      },
       initData(data_) {
         try {
           const data = new PywbData(data_);
@@ -121,26 +107,6 @@
   .short-nav .url {
     text-align: left;
     margin: 0 25px;
-  }
-  .short-nav .url .go-btn {
-    position: relative;
-    left: 0;
-    display: inline-block;
-    height: 15px;
-    line-height: 15px;
-    padding: 2px;
-    border: 1px solid black;
-    border-radius: 5px;
-    background-color: #eeeeee;
-    cursor: pointer;
-    transition: left 300ms ease-in, background-color 300ms ease-in;
-  }
-  .short-nav .url .go-btn:hover {
-    background-color: antiquewhite;
-    left: 3px;
-  }
-  .short-nav .url input, .short-nav .url select {
-    width: 50%;
   }
 
   .full-view-toggle {

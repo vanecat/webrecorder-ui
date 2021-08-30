@@ -4,7 +4,7 @@ function PywbVueInit() {
     const components = {};
     const config = {};
 
-    this.init = (config) => {
+    this.init = () => {
         // components templates
         document.querySelectorAll('[data-template]').forEach((item) => {
             components[item.dataset.template].template = item.innerHTML;
@@ -17,12 +17,16 @@ function PywbVueInit() {
         });
 
         // main app
+        app.data.config = config;
         app = new Vue(app);
     };
 
+    this.loadData = (data) => {
+        app.$emit('data-loaded', data);
+    };
 
-    this.updateConfig = () => {
-
+    this.updateConfig = (config_) => {
+        Object.assign(config, config_);
     };
 
     this.addAppConfig = (appConfig) => {
