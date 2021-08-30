@@ -74,7 +74,7 @@
 </div>
 
 <script>
-    Pywb.vue.components['calendar-month'] = {
+    PywbVue.addComponentConfig('calendar-month', {
         template: '#calendar-month',
         props: ['month', 'year'],
         data: function() {
@@ -123,6 +123,6 @@
                 return `width: ${scaledSize}px; height: ${scaledSize}px; top: ${margin}px; left: ${margin}px; border-radius: ${scaledSize/2}px; background-color: hsl(${scaledColorHue}, 100%, 50%, .2)`;
             }
         }
-    };
+    });
 </script>
 

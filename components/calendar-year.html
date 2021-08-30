@@ -36,7 +36,7 @@
 </div>
 
 <script>
-    Pywb.vue.components['calendar-year'] = {
+    PywbVue.addComponentConfig('calendar-year', {
         template: '#calendar-year',
         props: ['period'],
         data: function() {
@@ -58,6 +58,6 @@
                 return year;
             }
         }
-    };
+    });
 </script>
 

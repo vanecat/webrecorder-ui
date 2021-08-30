@@ -15,6 +15,6 @@
 <?php require_once('./components/calendar-year.html'); ?>
 <?php require_once('./components/calendar-month.html'); ?>
 <?php require_once('./app.html'); ?>
-<script>Pywb.init({});</script>
+<script>PywbVue.init({});</script>
 </body>
 </html>

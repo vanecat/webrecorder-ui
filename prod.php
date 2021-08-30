@@ -10,6 +10,6 @@
 <body>
 <?php require_once('./dist/main.html'); ?>
 
-<script>Pywb.init({});</script>
+<script>PywbVue.init({});</script>
 </body>
 </html>

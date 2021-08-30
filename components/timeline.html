@@ -30,7 +30,7 @@
 </div>
 
 <script>
-    Pywb.vue.components['timeline'] = {
+    PywbVue.addComponentConfig('timeline', {
         props: ['period'],
         template: '#timeline',
         data: function() {
@@ -172,7 +172,7 @@
                 //this.$refs.periodScroll.style.maxWidth = this.$refs.periods._computedStyle.width;
             }
         }
-    };
+    });
 </script>
 
 

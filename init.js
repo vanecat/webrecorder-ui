@@ -1,19 +1,48 @@
-const Pywb = {
-    data: {},
-    vue: {app:{}, components:{}},
-    init: (config) => {
+window.PywbVue = null;
+function PywbVueInit() {
+    let app = null;
+    const components = {};
+    const config = {};
+
+    this.init = (config) => {
         // components templates
         document.querySelectorAll('[data-template]').forEach((item) => {
-            Pywb.vue.components[item.dataset.template].template = item.innerHTML;
+            components[item.dataset.template].template = item.innerHTML;
             item.parentElement.removeChild(item);
         });
 
         // components
-        Object.keys(Pywb.vue.components).forEach(function(componentId) {
-            Vue.component(componentId, Pywb.vue.components[componentId]);
+        Object.keys(components).forEach(function(componentId) {
+            Vue.component(componentId, components[componentId]);
         });
 
         // main app
-        Pywb.vue.app = new Vue(Pywb.vue.app);
-    }
-};
+        app = new Vue(app);
+    };
+
+
+    this.updateConfig = () => {
+
+    };
+
+    this.addAppConfig = (appConfig) => {
+        if (app) {
+            // allow only once
+            throw Error('cannot init pywb vue app twice');
+        }
+        app = appConfig;
+    };
+
+    this.addComponentConfig = (name, componentConfig) => {
+        if (components[name]) {
+            throw Error('cannot init pywb vue component '+name+'twice');
+        }
+        components[name] = componentConfig;
+    };
+}
+
+/**
+ * @type {PywbVueInit}
+ */
+PywbVue = new PywbVueInit();
+Object.freeze(PywbVue);

@@ -18,7 +18,7 @@
 </div>
 
 <script>
-    Pywb.vue.components['timeline-summary'] = {
+    PywbVue.addComponentConfig('timeline-summary', {
         props: {
             period: {
                 required: true
@@ -37,7 +37,7 @@
                 }
             },
         }
-    };
+    });
 </script>
 
 <style>

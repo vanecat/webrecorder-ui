@@ -3,7 +3,7 @@
 </div>
 
 <script>
-    Pywb.vue.components['test'] = {
+    PywbVue.addComponentConfig('test', {
         props: ['testProp'],
         template: '#test',
         data: function() {
@@ -18,5 +18,5 @@
                 return true;
             }
         }
-    };
+    });
 </script>
