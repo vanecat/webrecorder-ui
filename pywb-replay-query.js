@@ -263,7 +263,7 @@ PywbReplayQuery.prototype.makeCDXRequest = function() {
                 data.timeInfo.month = months[data.timeInfo.month];
 
                 // render the results sent to us from the worker
-                renderCal.displayedCountStr(
+                console.log(
                     data.recordCount,
                     data.recordCountFormatted
                 );
@@ -281,7 +281,7 @@ PywbReplayQuery.prototype.makeCDXRequest = function() {
                 // the worker has consumed the entirety of the response body
                 terminate = true;
                 // if there were no results we need to inform the user
-                renderCal.displayedCountStr(
+                console.log(
                     data.recordCount,
                     data.recordCountFormatted
                 );
@@ -308,11 +308,11 @@ PywbReplayQuery.prototype.makeCDXRequest = function() {
         success: function(data) {
             var cdxLines = data ? data.trim().split('\n') : [];
             if (cdxLines.length === 0) {
-                renderCal.displayedCountStr(0, '0');
+                console.log(0, '0');
                 return;
             }
             var numCdxEntries = cdxLines.length;
-            renderCal.displayedCountStr(
+            console.log(
                 numCdxEntries,
                 numCdxEntries.toLocaleString()
             );
