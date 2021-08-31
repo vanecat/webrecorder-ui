@@ -8,7 +8,6 @@
           <timeline-summary
                   v-if="currentPeriod"
                   :period="currentPeriod"
-                  :snapshot-info="snapshotInfo"
                   @goto-period="gotoPeriod"
           ></timeline-summary>
           <span class="full-view-toggle" :class="{expanded: showFullView}" @click="showFullView = !showFullView">
