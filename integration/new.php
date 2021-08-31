@@ -12,7 +12,7 @@
   <iframe id="replay_iframe" frameborder="0" seamless="seamless" scrolling="yes" class="wb_iframe" allow="autoplay; fullscreen" style="width: 100%; height: 100%;"></iframe>
 </div>
 <script>
-  const rootUrl ='';
+  const rootUrl = 'http://webarchive:8888';
   const pathsAndLocalesConfig = {
       prefix: `${rootUrl}/integration/en/archive/`,
       staticPrefix: `${rootUrl}/integration/static/`,
@@ -51,7 +51,7 @@
       dateTime: "Date Time: ",
   };
   const config = {
-      initialView: 'calendar',
+      initialView: { url: '', timestamp: null},
       isGmt: false,
       logoImg: `${rootUrl}/integration/static/ukwa-2018-w-sml.png`,
       localizedText: localizedText,
@@ -60,20 +60,36 @@
 </script>
 
 <script>
-    var replayIframe = new ContentFrame({"url": "https://www.gov.uk/" + window.location.hash,
-        "prefix": `${rootUrl}/integration/en/archive/`,
-        "request_ts": "20140218231242",
-        "iframe": "#replay_iframe"});
+
+
+    function getInitialUrl() {
+        const urlString = String(window.location).replace(config.pathsAndLocales.prefix, '');
+        let urlMatch = urlString.match(/^([*0-9]+)\/(.+)$/);
+        if (urlMatch) {
+            return {timestamp: urlMatch[1].replace('*', ''), url: urlMatch[2]};
+        }
+        return false;
+    }
+    config.initialView = getInitialUrl();
+    console.log(config.initialView);
+    if (!config.initialView) {
+        throw Error('no url to load');
+    }
 
     new PywbReplayQuery(Object.assign({text: localizedText}, pathsAndLocalesConfig))
         .onDataDone(data => PywbVue.init(config, data))
         .init();
 
-    PywbVue.onShowSnapshot(url => {
-        if (url) {
-            replayIframe.set_url(url);
+    PywbVue.onShowSnapshot(snapshotOrUrl => {
+        if (snapshotOrUrl) {
+            if (!window.PywbReplayFrame) {
+                window.PywbReplayFrame = new ContentFrame({"iframe": "#replay_iframe", url: config.initialView.url, request_ts: config.initialView.timestamp});
+            }
+            if (snapshotOrUrl instanceof PywbSnapshot) {
+                window.PywbReplayFrame.load_url(snapshotOrUrl.url, snapshotOrUrl.id);
+            }
         }
-        replayIframe.style.display = url ? '' : 'none';
+        window.PywbReplayFrame.iframe.style.display = snapshotOrUrl ? '' : 'none';
     });
 </script>
 </body>
