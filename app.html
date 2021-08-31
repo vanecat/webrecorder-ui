@@ -18,6 +18,7 @@
         <timeline
                 v-if="currentPeriod"
                 :period="currentPeriod"
+                :highlight="timelineHighlight"
                 @goto-period="gotoPeriod"
         ></timeline>
       </div>
@@ -43,13 +44,19 @@
       showFullView: false,
       config: {
         title:''
-      }
+      },
+      timelineHighlight: false
     },
     mounted: function() {
       this.init();
     },
     methods: {
-      gotoPeriod: function(newPeriod) {
+      gotoPeriod: function(newPeriod, initiator) {
+        if (this.timelineHighlight) {
+          setTimeout((() => {
+            this.timelineHighlight=false;
+          }).bind(this), 3000);
+        }
         if (newPeriod.snapshot) {
           this.gotoSnapshot(newPeriod.snapshot)
         } else {

@@ -1,7 +1,7 @@
 <div data-template="timeline">
     <div class="timeline">
         <div class="arrow previous" :class="{disabled: isScrollZero && !previousPeriod}" @click="scrollPrev" @dblclick.stop.prevent>&#x25C0;</div>
-        <div class="scroll" ref="periodScroll">
+        <div class="scroll" ref="periodScroll" :class="{highlight: highlight}">
             <div class="periods" ref="periods">
                 <div v-for="subPeriod in period.children"
                      :key="subPeriod.id"
@@ -31,7 +31,7 @@
 
 <script>
     PywbVue.addComponentConfig('timeline', {
-        props: ['period'],
+        props: ['period', 'highlight'],
         template: '#timeline',
         data: function() {
             return {
@@ -225,10 +225,16 @@
         scroll-behavior: smooth;
 
         text-align: center;
+
+        transition: background-color 500ms ease-in;
     }
     /* hide scroll bar */
     .timeline .scroll::-webkit-scrollbar {
         display: none;
+    }
+    /* highlight the scroll period: usually triggered from root app */
+    .timeline .scroll.highlight {
+        background-color: #fff7ce;
     }
     .timeline .scroll .periods {
         display: flex;
