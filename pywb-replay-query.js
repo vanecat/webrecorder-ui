@@ -1,18 +1,15 @@
-var colon = ':';
-var usingWorkerStrat =
-    typeof window.Worker === 'function' &&
-    typeof window.fetch === 'function' &&
-    typeof window.TextDecoder === 'function' &&
-    typeof window.ReadableStream === 'function';
-
-var first = 1;
-
 /**
  * Class responsible for rendering the results of the query. If the query is considered regular
  * (no filter or match type query modifiers) the calender view is rendered otherwise the advanced search is rendered
  * @param {Object} init - Initialization info for rendering the results of the query
  */
 function PywbReplayQuery(init) {
+    PywbReplayQuery.usingWorkerStrat =
+        typeof window.Worker === 'function' &&
+        typeof window.fetch === 'function' &&
+        typeof window.TextDecoder === 'function' &&
+        typeof window.ReadableStream === 'function';
+
     if (!(this instanceof PywbReplayQuery)) return new PywbReplayQuery(init);
     this.prefix = init.prefix;
     this.cdxURL = this.prefix + 'cdx';
@@ -28,24 +25,7 @@ function PywbReplayQuery(init) {
             includeInURL: false
         }
     };
-    // references to the DOM structure elements that contain the to be rendered markup
-    this.containers = {
-        numCaptures: null,
-        updatesSpinner: null,
-        yearsListDiv: null,
-        monthsListDiv: null,
-        daysListDiv: null,
-        advancedResultsList: null,
-        countTextNode: null,
-        versionsTextNode: null
-    };
-    // ids of the to be created dom elements that are important to rendering the query results
-    this.domStructureIds = {
-        queryInfoId: 'display-query-type-info',
-        capturesMount: 'captures',
-        numCaptures: 'num-captures',
-        updatesSpinner: 'still-updating-spinner'
-    };
+
     // memoized last active year month day tab information
     this.lastActiveYMD = {};
     this.lastActiveDaysTab = null;
@@ -67,6 +47,8 @@ function PywbReplayQuery(init) {
     };
     this.text = init.text;
     this.versionString = null;
+
+    this.data = [];
 }
 
 /**
@@ -246,62 +228,49 @@ PywbReplayQuery.prototype.makeCDXQueryURL = function() {
 PywbReplayQuery.prototype.makeCDXRequest = function() {
     // if we are rendering the calendar view (regular result view) we need memoizedYMDT to be an object otherwise nothing
     var memoizedYMDT = this.queryInfo.calView ? {} : null;
-    var renderCal = this;
     // initialized the dom structure
-    this.createContainers();
-    if (usingWorkerStrat) {
+    if (PywbReplayQuery.usingWorkerStrat) {
+        console.log('cdx worker');
         // execute the query and render the results using the query worker
         var queryWorker = new window.Worker(this.staticPrefix + '/queryWorker.js');
         var cdxRecordMsg = 'cdxRecord';
         var done = 'finished';
         var months = this.text.months;
 
-        queryWorker.onmessage = function(msg) {
+        const onmessage = function(msg) {
             var data = msg.data;
             var terminate = false;
             if (data.type === cdxRecordMsg) {
                 data.timeInfo.month = months[data.timeInfo.month];
-
-                // render the results sent to us from the worker
-                console.log(
-                    data.recordCount,
-                    data.recordCountFormatted
-                );
-                if (renderCal.queryInfo.calView) {
-                    renderCal.renderDateCalPart(
-                        memoizedYMDT,
-                        data.record,
-                        data.timeInfo,
-                        data.recordCount === first
-                    );
-                } else {
-                    renderCal.renderAdvancedSearchPart(data.record);
-                }
+                // add data
+                // console.log(
+                //     data.record,
+                //     memoizedYMDT,
+                //     data.timeInfo,
+                //     data.recordCount,
+                //     data.recordCountFormatted
+                // );
+                this.triggerDataReceived(data.record);
+                this.data.push(data.record);
             } else if (data.type === done) {
                 // the worker has consumed the entirety of the response body
                 terminate = true;
-                // if there were no results we need to inform the user
-                console.log(
-                    data.recordCount,
-                    data.recordCountFormatted
-                );
             }
             if (terminate) {
                 queryWorker.terminate();
-                var spinner = document.getElementById(
-                    renderCal.domStructureIds.updatesSpinner
-                );
-                if (spinner && spinner.parentNode) {
-                    spinner.parentNode.removeChild(spinner);
-                }
+                // done, signal done
+                console.log('done');
+                this.triggerDataDone(this.data);
             }
         };
+        queryWorker.onmessage = onmessage.bind(this);
         queryWorker.postMessage({
             type: 'query',
             queryURL: this.makeCDXQueryURL()
         });
         return;
     }
+    console.log('ajax');
     // main thread processing
     $.ajax(this.makeCDXQueryURL(), {
         dataType: 'text',
@@ -318,23 +287,38 @@ PywbReplayQuery.prototype.makeCDXRequest = function() {
             );
             for (var i = 0; i < numCdxEntries; ++i) {
                 var cdxObj = JSON.parse(cdxLines[i]);
-                if (renderCal.queryInfo.calView) {
-                    renderCal.renderDateCalPart(
-                        memoizedYMDT,
-                        cdxObj,
-                        renderCal.makeTimeInfo(cdxObj),
-                        i === 0
-                    );
-                } else {
-                    renderCal.renderAdvancedSearchPart(cdxObj);
-                }
+                // add data
+                // console.log(
+                //     data.record,
+                //     memoizedYMDT,
+                //     data.timeInfo,
+                //     data.recordCount,
+                //     data.recordCountFormatted
+                // );
+                this.triggerDataReceived(data.record);
+                this.data.push(data.record);
             }
-            var spinner = document.getElementById(
-                renderCal.domStructureIds.updatesSpinner
-            );
-            if (spinner && spinner.parentNode) {
-                spinner.parentNode.removeChild(spinner);
-            }
+            //
+            this.triggerDataDone(this.data);
+            console.log('done');
         }
     });
+};
+
+PywbReplayQuery.prototype.onDataReceivedSubscribers = [];
+PywbReplayQuery.prototype.onDataReceived = function(callbackFn, context) {
+    this.onDataReceivedSubscribers.push(callbackFn.bind(context));
+    return this; // for chain calls
+};
+PywbReplayQuery.prototype.triggerDataReceived = function(data) {
+    this.onDataReceivedSubscribers.forEach(fn => fn(data));
+};
+
+PywbReplayQuery.prototype.onDataDoneSubscribers = [];
+PywbReplayQuery.prototype.onDataDone = function(callbackFn, context) {
+    this.onDataDoneSubscribers.push(callbackFn.bind(context));
+    return this; // for chain calls
+};
+PywbReplayQuery.prototype.triggerDataDone = function(data) {
+    this.onDataDoneSubscribers.forEach(fn => fn(data));
 };

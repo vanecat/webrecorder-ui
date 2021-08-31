@@ -3,8 +3,8 @@ function PywbVueInit() {
     let app = null;
     const components = {};
     const config = {};
-
-    this.init = () => {
+    let data = null;
+    this.init = (config, data) => {
         // components templates
         document.querySelectorAll('[data-template]').forEach((item) => {
             components[item.dataset.template].template = item.innerHTML;
@@ -18,15 +18,21 @@ function PywbVueInit() {
 
         // main app
         app.data.config = config;
+        data = new PywbData(data);
+        app.data.snapshots = data.snapshots;
+        app.data.currentPeriod = data.timeline;
         app = new Vue(app);
+        app.$on('show-snapshot', this.showSnapshotTrigger);
     };
 
-    this.loadData = (data) => {
-        app.$emit('data-loaded', data);
-    };
 
-    this.updateConfig = (config_) => {
-        Object.assign(config, config_);
+    this.onShowSnapshotCallbacks = [];
+    this.onShowSnapshot = function(callbackFn, context) {
+        this.onShowSnapshotCallbacks.push(callbackFn.bind(context));
+        return this; // for chain calls
+    };
+    this.showSnapshotTrigger = function(url) {
+        this.onShowSnapshotCallbacks.forEach(fn => fn(url));
     };
 
     this.addAppConfig = (appConfig) => {

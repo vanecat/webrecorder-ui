@@ -27,9 +27,6 @@
                  :period="currentPeriod"
                  @goto-period="gotoPeriod">
   </calendar-year>
-  <div class="iframe" v-if="currentSnapshot">
-    <iframe :src="currentSnapshot.load_url"></iframe>
-  </div>
 </div>
 <script>
   PywbVue.addAppConfig({
@@ -37,31 +34,32 @@
     data: {
       snapshots: [],
       currentPeriod: null,
-      currentSnapshot: null,
       msgs: [],
-      sampleData: ['bbc-com', 'uk-gov'],
-      showFullView: false
+      showFullView: false,
+      config: {}
     },
     mounted: function() {
-      this.$on('data-loaded', this.initData);
+      this.init();
     },
     methods: {
-      initData(data_) {
-        try {
-          const data = new PywbData(data_);
-          this.snapshots = data.snapshots;
-          this.currentPeriod = data.timeline;
-        } catch(e) {
-          console.error(e.message);
-        }
-      },
       gotoPeriod: function(newPeriod) {
         if (newPeriod.snapshot) {
-          // if single-snapshot period, just go to snapshot (do not change timeline period)
-          this.currentSnapshot = newPeriod.snapshot;
-          // COMMUNICATE TO ContentFrame
+          this.gotoSnapshot(newPeriod.snapshot.load_url)
         } else {
           this.currentPeriod = newPeriod;
+        }
+      },
+      gotoSnapshot(url) {
+        // COMMUNICATE TO ContentFrame
+        this.$emit('show-snapshot', url);
+      },
+      init() {
+        if (this.data.config.initialView === 'calendar') {
+          this.showFullView = true;
+          this.$emit('show-snapshot', false);
+        } else {
+          this.showFullView = false;
+          this.gotoSnapshot(this.data.config.initialView);
         }
       }
     }
