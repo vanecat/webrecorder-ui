@@ -5,6 +5,9 @@ RewriteRule ^(\w\w)/archive/cdx$ /integration/cdx.php [L,P]
 RewriteRule ^(\w\w)/archive/\*/.*$ /integration/new.php [L,P]
 RewriteRule ^(\w\w)/archive/[0-9]+/.*$ /integration/new.php [L,P]
 
+# http://webarchive:8888/en/archive/20140218231242mp_/https://www.gov.uk/
+RewriteRule ^(\w\w)/archive/([0-9]+mp_)/(.*)$ https://www.webarchive.org.uk/wayback/$1/archive/$2/$3 [L,P]
+
 RewriteRule ^(\w\w)/archive/\*/.*$ /integration/query.html [L,P]
 RewriteRule ^(\w\w)/archive/[0-9]+/.*$ /integration/frame_insert.html [L,P]
 
