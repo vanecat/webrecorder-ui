@@ -44,19 +44,19 @@
     methods: {
       gotoPeriod: function(newPeriod) {
         if (newPeriod.snapshot) {
-          this.gotoSnapshot(newPeriod.snapshot.load_url)
+          this.gotoSnapshot(newPeriod.snapshot)
         } else {
           this.currentPeriod = newPeriod;
         }
       },
-      gotoSnapshot(url) {
+      gotoSnapshot(snapshot) {
         // COMMUNICATE TO ContentFrame
-        this.$emit('show-snapshot', url);
+        this.$emit('show-snapshot', snapshot);
       },
       init() {
-        if (this.config.initialView === 'calendar') {
+        if (!this.config.initialView.timestamp) {
           this.showFullView = true;
-          this.$emit('show-snapshot', false);
+          //this.$emit('show-snapshot', false);
         } else {
           this.showFullView = false;
           this.gotoSnapshot(this.config.initialView);
