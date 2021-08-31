@@ -22,8 +22,8 @@
         ></timeline>
       </div>
     </div>
-    <div class="second-line">
-
+    <div class="second-line" v-if="currentSnapshot && !showFullView">
+      <h2>Showing Capture from {{currentSnapshot.getTimeDateFormatted()}}</h2>
     </div>
   </div>
 
@@ -38,6 +38,7 @@
     data: {
       snapshots: [],
       currentPeriod: null,
+      currentSnapshot: null,
       msgs: [],
       showFullView: false,
       config: {
@@ -56,8 +57,10 @@
         }
       },
       gotoSnapshot(snapshot) {
+        this.currentSnapshot = snapshot;
         // COMMUNICATE TO ContentFrame
         this.$emit('show-snapshot', snapshot);
+        this.showFullView = false;
       },
       init() {
         if (!this.config.title) {
