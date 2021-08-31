@@ -12,7 +12,7 @@
     <div v-for="msg in msgs">{{msg}}</div>
     <div @click="showSnapshots = !showSnapshots">
         <span v-if="showSnapshots">+</span><span v-if="!showSnapshots">-</span>
-        <strong>{{snaps.length}} snapshots</strong>
+        <strong>{{snaps.length}} captures</strong>
     </div>
     <div v-if="showSnapshots">
         <div v-for="s in snaps">{{s.year}}-{{s.month}}-{{s.day}} {{s.hour}}:{{s.minute}}</div>
