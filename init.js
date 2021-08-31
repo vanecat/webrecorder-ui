@@ -22,17 +22,17 @@ function PywbVueInit() {
         app.data.snapshots = data.snapshots;
         app.data.currentPeriod = data.timeline;
         app = new Vue(app);
-        app.$on('show-snapshot', this.showSnapshotTrigger);
+        app.$on('show-snapshot', this.showSnapshotTrigger.bind(this));
     };
 
 
     this.onShowSnapshotCallbacks = [];
     this.onShowSnapshot = function(callbackFn, context) {
-        this.onShowSnapshotCallbacks.push(callbackFn.bind(context));
+        this.onShowSnapshotCallbacks.push(callbackFn.bind(context || this));
         return this; // for chain calls
     };
-    this.showSnapshotTrigger = function(url) {
-        this.onShowSnapshotCallbacks.forEach(fn => fn(url));
+    this.showSnapshotTrigger = function(snapshot) {
+        this.onShowSnapshotCallbacks.forEach(fn => fn(snapshot));
     };
 
     this.addAppConfig = (appConfig) => {
