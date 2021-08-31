@@ -52,12 +52,25 @@
     .calendar-month .day .size {
         position: absolute;
         box-sizing: border-box;
-        background-color: rgba(200,100,100,.5);
+        background-color: rgba(166, 205, 245, .85);
         z-index: 10;
     }
+    .calendar-month .day .day-id {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 11;
 
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+
+        color: black;
+    }
     .calendar-month .day:hover .size {
         border: 1px solid black;
+    }
+    .calendar-month .day:hover {
         cursor: zoom-in;
     }
 </style>
@@ -67,7 +80,7 @@
         <h3>{{month.getReadableId()}}</h3>
         <div v-if="month.snapshotCount">
             <span v-for="(day) in ['S', 'M', 'T', 'W', 'H', 'F', 'S']" class="day" :style="dayStyle">{{day}}</span><br/>
-            <span v-for="(day,i) in days"><br v-if="i && i % 7===0"/><span class="day" :class="{empty: !day || !day.snapshotCount}" :style="dayStyle"><template v-if="day"><span class="size" v-if="day.snapshotCount" :style="getDayCountCircleStyle(day.snapshotCount)" @click="$emit('goto-period', day)"></span>{{day.id}}<span v-if="day.snapshotCount" class="count">{{day.snapshotCount}} snapshot<span v-if="day.snapshotCount!==1">s</span></span></template><template v-else>&nbsp;</template></span></span>
+            <span v-for="(day,i) in days"><br v-if="i && i % 7===0"/><span class="day" :class="{empty: !day || !day.snapshotCount}" :style="dayStyle"  @click="$emit('goto-period', day)"><template v-if="day"><span class="size" v-if="day.snapshotCount" :style="getDayCountCircleStyle(day.snapshotCount)"> </span><span class="day-id">{{day.id}}</span><span v-if="day.snapshotCount" class="count">{{day.snapshotCount}} snapshot<span v-if="day.snapshotCount!==1">s</span></span></template><template v-else>&nbsp;</template></span></span>
         </div>
         <div v-else class="empty">no snapshots</div>
     </div>
@@ -116,11 +129,13 @@
                 const scaledSize = size ? (this.daySize*.3 + Math.ceil(size*.7)) : 0;
                 const margin = (this.daySize-scaledSize)/2;
 
+                // TEMPORARILY DISABLE AUTO-HUE calculation as it is contributing to better understand of data
                 // color hue should go form blue (240deg) to red (360deg)
-                const colorHue = Math.ceil((snapshotCount/this.year.maxGrandchildSnapshotCount) * (360-240));
-                const scaledColorHue = size ? (240 + colorHue) : 240;
+                // const colorHue = Math.ceil((snapshotCount/this.year.maxGrandchildSnapshotCount) * (360-240));
+                // const scaledColorHue = size ? (240 + colorHue) : 240;
+                // background-color: hsl(${scaledColorHue}, 100%, 50%, .2)
 
-                return `width: ${scaledSize}px; height: ${scaledSize}px; top: ${margin}px; left: ${margin}px; border-radius: ${scaledSize/2}px; background-color: hsl(${scaledColorHue}, 100%, 50%, .2)`;
+                return `width: ${scaledSize}px; height: ${scaledSize}px; top: ${margin}px; left: ${margin}px; border-radius: ${scaledSize/2}px;`;
             }
         }
     });
