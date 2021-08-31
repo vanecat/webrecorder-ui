@@ -54,12 +54,12 @@
         this.$emit('show-snapshot', url);
       },
       init() {
-        if (this.data.config.initialView === 'calendar') {
+        if (this.config.initialView === 'calendar') {
           this.showFullView = true;
           this.$emit('show-snapshot', false);
         } else {
           this.showFullView = false;
-          this.gotoSnapshot(this.data.config.initialView);
+          this.gotoSnapshot(this.config.initialView);
         }
       }
     }
