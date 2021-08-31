@@ -83,10 +83,10 @@
     PywbVue.onShowSnapshot(snapshotOrUrl => {
         if (snapshotOrUrl) {
             if (!window.PywbReplayFrame) {
-                window.PywbReplayFrame = new ContentFrame({"iframe": "#replay_iframe", url: config.initialView.url, request_ts: config.initialView.timestamp});
+                window.PywbReplayFrame = new ContentFrame({"iframe": "#replay_iframe", url: snapshotOrUrl.url, request_ts: snapshotOrUrl.id});
             }
             if (snapshotOrUrl instanceof PywbSnapshot) {
-                window.PywbReplayFrame.load_url(snapshotOrUrl.url, snapshotOrUrl.id);
+                window.PywbReplayFrame.iframe.src = snapshotOrUrl.load_url;
             }
         }
         window.PywbReplayFrame.iframe.style.display = snapshotOrUrl ? '' : 'none';
