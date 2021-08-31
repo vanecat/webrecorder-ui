@@ -8,17 +8,18 @@
 </head>
 <body>
 <?php require_once('../dist/main.html'); ?>
-<div id="wb_iframe_div">
-  <iframe id="replay_iframe" frameborder="0" seamless="seamless" scrolling="yes" class="wb_iframe" allow="autoplay; fullscreen"></iframe>
+<div id="wb_iframe_div" style="width: 100vw; height 50vh;">
+  <iframe id="replay_iframe" frameborder="0" seamless="seamless" scrolling="yes" class="wb_iframe" allow="autoplay; fullscreen" style="width: 100%; height: 100%;"></iframe>
 </div>
 <script>
+  const rootUrl ='';
   const pathsAndLocalesConfig = {
-      prefix: "/integration/en/archive/",
-      staticPrefix: "/integration/static/",
+      prefix: `${rootUrl}/integration/en/archive/`,
+      staticPrefix: `${rootUrl}/integration/static/`,
       locale: "en",
       curr_locale: "en",
       locales: ['en', 'cy'],
-      locale_prefixes: {"en":"/integration/en/archive/","cy":"/integration/cy/archive/"},
+      locale_prefixes: {"en":`${rootUrl}/integration/en/archive/`,"cy":`${rootUrl}/integration/cy/archive/`},
   };
   const localizedText = {
       liveMsg: decodeURIComponent("Live On"),
@@ -52,7 +53,7 @@
   const config = {
       initialView: 'calendar',
       isGmt: false,
-      logoImg: "/integration/static/ukwa-2018-w-sml.png",
+      logoImg: `${rootUrl}/integration/static/ukwa-2018-w-sml.png`,
       localizedText: localizedText,
       pathsAndLocales: pathsAndLocalesConfig
   }
@@ -60,7 +61,7 @@
 
 <script>
     var replayIframe = new ContentFrame({"url": "https://www.gov.uk/" + window.location.hash,
-        "prefix": "/en/archive/",
+        "prefix": `${rootUrl}/integration/en/archive/`,
         "request_ts": "20140218231242",
         "iframe": "#replay_iframe"});
 
