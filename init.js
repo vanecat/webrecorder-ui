@@ -2,7 +2,6 @@ window.PywbVue = null;
 function PywbVueInit() {
     let app = null;
     const components = {};
-    const config = {};
     let data = null;
     this.init = (config, data) => {
         // components templates
