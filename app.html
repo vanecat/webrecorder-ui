@@ -12,6 +12,7 @@
           ></timeline-summary>
           <span class="full-view-toggle" :class="{expanded: showFullView}" @click="showFullView = !showFullView">
             <template v-if="!showFullView"><span class="detail">show year calendar</span></template><template v-else><span class="detail">hide year calendar</span></template>
+            <img src="/static/calendar-icon.png" />
           </span>
         </div>
         <timeline
@@ -113,18 +114,21 @@
   .short-nav .url {
     text-align: left;
     margin: 0 25px;
+    position: relative;
   }
 
   .full-view-toggle {
-    margin-left: 10px;
-    padding-left: 30px;
-    background-image: url(/static/calendar-icon.png);
-    background-repeat: no-repeat;
-    background-position: 0 2px;
-    background-size: 30px;
-    line-height: 30px;
+    position: absolute;
+    top: 0;
+    right: 0;
     border-radius: 5px;
+    padding: 4px;
     cursor: zoom-in;
+  }
+  .full-view-toggle img {
+    width: 17px;
+    display: inline-block;
+    margin-top: 2px;
   }
   .full-view-toggle:hover {
     background-color: #eeeeee;
