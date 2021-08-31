@@ -30,6 +30,7 @@
                     :key="month.id"
                     :month="month"
                     :year="year"
+                    :is-current="month === currentMonth"
                     @goto-period="$emit('goto-period', $event)"
             ></calendar-month>
         </div>
@@ -57,6 +58,15 @@
                     year.fillEmptyChildPeriods(true);
                 }
                 return year;
+            },
+            currentMonth() {
+                let month = null;
+                if (this.period.type === PywbPeriod.Type.month) {
+                    month = this.period;
+                } else {
+                    month = this.period.getParents().filter(p => p.type === PywbPeriod.Type.month)[0];
+                }
+                return month;
             }
         }
     });

@@ -13,6 +13,10 @@
         background-color: #eeeeee;
         border-radius: 10px;
     }
+    .calendar-month.current {
+        background-color: #fff7ce;
+        border-radius: 5px;
+    }
     .calendar-month > h3 {
         margin: 0;
         font-size: 16px;
@@ -76,7 +80,7 @@
 </style>
 
 <div data-template="calendar-month">
-    <div class="calendar-month">
+    <div class="calendar-month" :class="{current: isCurrent}">
         <h3>{{month.getReadableId()}}</h3>
         <div v-if="month.snapshotCount">
             <span v-for="(day) in ['S', 'M', 'T', 'W', 'H', 'F', 'S']" class="day" :style="dayStyle">{{day}}</span><br/>
@@ -89,7 +93,7 @@
 <script>
     PywbVue.addComponentConfig('calendar-month', {
         template: '#calendar-month',
-        props: ['month', 'year'],
+        props: ['month', 'year', 'isCurrent'],
         data: function() {
             return {
                 maxInDay: 0,
