@@ -36,7 +36,9 @@
       currentPeriod: null,
       msgs: [],
       showFullView: false,
-      config: {}
+      config: {
+        title:''
+      }
     },
     mounted: function() {
       this.init();
@@ -54,6 +56,9 @@
         this.$emit('show-snapshot', snapshot);
       },
       init() {
+        if (!this.config.title) {
+          this.config.title = this.config.initialView.url;
+        }
         if (!this.config.initialView.timestamp) {
           this.showFullView = true;
           //this.$emit('show-snapshot', false);
