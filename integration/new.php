@@ -48,8 +48,7 @@
       viewAllCaptures: "View All Captures",
       searchResultsTitle: 'Search Results',
       dateTime: "Date Time: ",
-    }
-  }
+  };
   const config = {
       initialView: 'calendar',
       isGmt: false,
@@ -65,7 +64,7 @@
         "request_ts": "20140218231242",
         "iframe": "#replay_iframe"});
 
-    new PywbReplayQuery(pathsAndLocalesConfig)
+    new PywbReplayQuery(Object.assign({text: localizedText}, pathsAndLocalesConfig))
         .onDataDone(data => PywbVue.init(config, data))
         .init();
 
