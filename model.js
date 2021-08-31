@@ -86,7 +86,7 @@ PywbSnapshot.prototype.getTimeDateFormatted = function() {
     return `${this.year}-${PywbMonthLabels[this.month]}-${this.day} ${this.getTimeFormatted()}`;
 }
 PywbSnapshot.prototype.getTimeFormatted = function() {
-    return (this.hour < 13 ? this.hour : (this.hour % 12)) + ':' + ((this.minute < 10 ? '0':'')+this.minute) + ' ' + ((this.second < 10 ? '0':'')+this.second) + ' ' + (this.hour < 12 ? 'am':'pm');
+    return (this.hour < 13 ? this.hour : (this.hour % 12)) + ':' + ((this.minute < 10 ? '0':'')+this.minute) + ':' + ((this.second < 10 ? '0':'')+this.second) + ' ' + (this.hour < 12 ? 'am':'pm');
 }
 
 /* ---------------- PERIOD object ----------------- */
