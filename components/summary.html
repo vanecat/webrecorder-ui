@@ -4,7 +4,6 @@
             <span class="item">
                 <span class="goto" @click="changePeriod(parents[0])">{{parents[0].getReadableId(true)}}</span>
             </span>
-            <span class="count">({{parents[0].snapshotCount}})</span>
             &gt;
             <span v-for="(parent,i) in parents" :key="parent.id" class="item" v-if="i > 0">
                 <span class="goto" @click="changePeriod(parent)">{{parent.getReadableId(true)}}</span>
@@ -42,19 +41,18 @@
 
 <style>
     .summary {
-        margin-left: 210px;
+        display: inline-block;
     }
 
     .summary .item {
         position: relative;
         display: inline;
         margin: 0 2px 0 0;
-        font-size: 28px;
+        font-size: inherit;
     }
     .summary .count {
         vertical-align: middle;
-        font-size: 14px;
-        line-height: 28px;
+        font-size: inherit;
     }
     .summary .count .verbose {
         display: none;
