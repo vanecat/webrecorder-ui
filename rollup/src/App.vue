@@ -1,5 +1,5 @@
 <template>
-  <div class="app">
+  <div class="app" data-app="webrecorder-replay-app">
     <div class="short-nav">
       <div class="first-line">
         <div class="logo"><img src="/static/webarch-logo.png" /></div>
@@ -37,59 +37,62 @@
 </template>
 
 <script>
-  import Timeline from './components/Timeline.vue';
-  import TimelineSummary from './components/Summary.vue';
-  import CalendarYear from './components/CalendarYear.vue';
-  export default {
-    'name': 'PywbReplayApp',
-    el: '[data-app="webrecorder-replay-app"]',
-    data: {
+import Timeline from "./components/Timeline.vue";
+import TimelineSummary from "./components/Summary.vue";
+import CalendarYear from "./components/CalendarYear.vue";
+export default {
+  name: "PywbReplayApp",
+  //el: '[data-app="webrecorder-replay-app"]',
+  data: function() {
+    return {
       snapshots: [],
       currentPeriod: null,
       currentSnapshot: null,
       msgs: [],
       showFullView: false,
       config: {
-        title:''
+        title:""
       },
       timelineHighlight: false
+    };
+  },
+  components: {Timeline, TimelineSummary, CalendarYear},
+  mounted: function() {
+    this.init();
+  },
+  methods: {
+    gotoPeriod: function(newPeriod, initiator) {
+      if (this.timelineHighlight) {
+        setTimeout((() => {
+          this.timelineHighlight=false;
+        }).bind(this), 3000);
+      }
+      if (newPeriod.snapshot) {
+        this.gotoSnapshot(newPeriod.snapshot);
+      } else {
+        this.currentPeriod = newPeriod;
+      }
     },
-    mounted: function() {
-      this.init();
+    gotoSnapshot(snapshot) {
+      this.currentSnapshot = snapshot;
+      // COMMUNICATE TO ContentFrame
+      this.$emit("show-snapshot", snapshot);
+      this.showFullView = false;
     },
-    methods: {
-      gotoPeriod: function(newPeriod, initiator) {
-        if (this.timelineHighlight) {
-          setTimeout((() => {
-            this.timelineHighlight=false;
-          }).bind(this), 3000);
-        }
-        if (newPeriod.snapshot) {
-          this.gotoSnapshot(newPeriod.snapshot)
-        } else {
-          this.currentPeriod = newPeriod;
-        }
-      },
-      gotoSnapshot(snapshot) {
-        this.currentSnapshot = snapshot;
-        // COMMUNICATE TO ContentFrame
-        this.$emit('show-snapshot', snapshot);
+    init() {
+      if (!this.config.title) {
+        this.config.title = this.config.initialView.url;
+      }
+      if (!this.config.initialView.timestamp) {
+        this.showFullView = true;
+        //this.$emit('show-snapshot', false);
+      } else {
         this.showFullView = false;
-      },
-      init() {
-        if (!this.config.title) {
-          this.config.title = this.config.initialView.url;
-        }
-        if (!this.config.initialView.timestamp) {
-          this.showFullView = true;
-          //this.$emit('show-snapshot', false);
-        } else {
-          this.showFullView = false;
-          this.gotoSnapshot(this.config.initialView);
-        }
+        this.gotoSnapshot(this.config.initialView);
       }
     }
   }
+};
 </script>
 
 <style>

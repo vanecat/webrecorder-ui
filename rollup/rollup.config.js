@@ -1,18 +1,20 @@
-import vue from 'rollup-plugin-vue'
-import css from 'rollup-plugin-css-only'
+import vue from "rollup-plugin-vue";
+import css from "rollup-plugin-css-only";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 
 export default [
   {
-    input: 'src/App.vue',
+    input: "src/index.js",
     output: {
-      file: 'dist/app.js',
-      format: 'es',
-      sourcemap: 'inline',
+      file: "dist/app.js",
+      sourcemap: "inline",
+      name: "PywbVue",
+      format: "iife",
     },
     plugins: [
-        vue({css: false}),
-        css()
+      vue({css: true, compileTemplate: true}),
+      css(),
+      nodeResolve({browser: true})
     ],
-    external: ['vue'],
   },
-]
+];

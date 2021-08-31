@@ -91,61 +91,61 @@
 </template>
 
 <script>
-    export default {
-        props: ['month', 'year', 'isCurrent'],
-        data: function() {
-            return {
-                maxInDay: 0,
-                daySize: 30,
-            };
-        },
-        computed: {
-            dayStyle() {
-                const s = this.daySize;
-                return `height: ${s}px; width: ${s}px; line-height: ${s}px`;
-            },
-            days() {
-                if (!this.month || !this.month.snapshotCount) {
-                    return [];
-                }
-                const days = [];
-                // Get days in month, and days in the complete weeks before first day and after last day
-                const [firstDay, lastDay] = this.month.getChildrenRange();
-                const daysBeforeFirst = (new Date(this.year.id, this.month.id-1, firstDay)).getDay();
-                const daysAfterLastDay = (6 - (new Date(this.year.id, this.month.id-1, lastDay)).getDay());
-                for(let i=0; i<daysBeforeFirst; i++) {
-                    days.push(null);
-                }
-                const hasChildren = !!this.month.children.length;
-                for(let i=0; i<lastDay; i++) {
-                    days.push(hasChildren ? this.month.children[i] : null);
-                }
-                for(let i=0; i<daysAfterLastDay; i++) {
-                    days.push(null);
-                }
-                return days;
-            }
-        },
-        methods: {
-            gotoDay(day) {
-                // upon doing to day, tell timeline to highlight itself
-                this.$root.timelineHighlight = true;
-                this.$emit('goto-period', day);
-            },
-            getDayCountCircleStyle(snapshotCount) {
-                const size = Math.ceil((snapshotCount/this.year.maxGrandchildSnapshotCount) * this.daySize);
-                const scaledSize = size ? (this.daySize*.3 + Math.ceil(size*.7)) : 0;
-                const margin = (this.daySize-scaledSize)/2;
-
-                // TEMPORARILY DISABLE AUTO-HUE calculation as it is contributing to better understand of data
-                // color hue should go form blue (240deg) to red (360deg)
-                // const colorHue = Math.ceil((snapshotCount/this.year.maxGrandchildSnapshotCount) * (360-240));
-                // const scaledColorHue = size ? (240 + colorHue) : 240;
-                // background-color: hsl(${scaledColorHue}, 100%, 50%, .2)
-
-                return `width: ${scaledSize}px; height: ${scaledSize}px; top: ${margin}px; left: ${margin}px; border-radius: ${scaledSize/2}px;`;
-            }
-        }
+export default {
+  props: ["month", "year", "isCurrent"],
+  data: function() {
+    return {
+      maxInDay: 0,
+      daySize: 30,
+    };
+  },
+  computed: {
+    dayStyle() {
+      const s = this.daySize;
+      return `height: ${s}px; width: ${s}px; line-height: ${s}px`;
+    },
+    days() {
+      if (!this.month || !this.month.snapshotCount) {
+        return [];
+      }
+      const days = [];
+      // Get days in month, and days in the complete weeks before first day and after last day
+      const [firstDay, lastDay] = this.month.getChildrenRange();
+      const daysBeforeFirst = (new Date(this.year.id, this.month.id-1, firstDay)).getDay();
+      const daysAfterLastDay = (6 - (new Date(this.year.id, this.month.id-1, lastDay)).getDay());
+      for(let i=0; i<daysBeforeFirst; i++) {
+        days.push(null);
+      }
+      const hasChildren = !!this.month.children.length;
+      for(let i=0; i<lastDay; i++) {
+        days.push(hasChildren ? this.month.children[i] : null);
+      }
+      for(let i=0; i<daysAfterLastDay; i++) {
+        days.push(null);
+      }
+      return days;
     }
+  },
+  methods: {
+    gotoDay(day) {
+      // upon doing to day, tell timeline to highlight itself
+      this.$root.timelineHighlight = true;
+      this.$emit("goto-period", day);
+    },
+    getDayCountCircleStyle(snapshotCount) {
+      const size = Math.ceil((snapshotCount/this.year.maxGrandchildSnapshotCount) * this.daySize);
+      const scaledSize = size ? (this.daySize*.3 + Math.ceil(size*.7)) : 0;
+      const margin = (this.daySize-scaledSize)/2;
+
+      // TEMPORARILY DISABLE AUTO-HUE calculation as it is contributing to better understand of data
+      // color hue should go form blue (240deg) to red (360deg)
+      // const colorHue = Math.ceil((snapshotCount/this.year.maxGrandchildSnapshotCount) * (360-240));
+      // const scaledColorHue = size ? (240 + colorHue) : 240;
+      // background-color: hsl(${scaledColorHue}, 100%, 50%, .2)
+
+      return `width: ${scaledSize}px; height: ${scaledSize}px; top: ${margin}px; left: ${margin}px; border-radius: ${scaledSize/2}px;`;
+    }
+  }
+};
 </script>
 

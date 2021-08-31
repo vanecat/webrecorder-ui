@@ -38,37 +38,40 @@
 </template>
 
 <script>
-  import CalendarMonth from "./CalendarMonth.vue";
-    export default {
-        props: ['period'],
-        data: function() {
-            return {};
-        },
-        computed: {
-            year() {
-                let year = null;
-                if (this.period.type === PywbPeriod.Type.all) {
-                    year = this.period.children[this.period.children.length-1];
-                } else if (this.period.type === PywbPeriod.Type.year) {
-                    year = this.period;
-                } else {
-                    year = this.period.getParents().filter(p => p.type === PywbPeriod.Type.year)[0];
-                }
-                if (year) {
-                    year.fillEmptyChildPeriods(true);
-                }
-                return year;
-            },
-            currentMonth() {
-                let month = null;
-                if (this.period.type === PywbPeriod.Type.month) {
-                    month = this.period;
-                } else {
-                    month = this.period.getParents().filter(p => p.type === PywbPeriod.Type.month)[0];
-                }
-                return month;
-            }
-        }
+import CalendarMonth from "./CalendarMonth.vue";
+import { PywbPeriod } from "../model.js";
+
+export default {
+  components: {CalendarMonth},
+  props: ["period"],
+  data: function() {
+    return {};
+  },
+  computed: {
+    year() {
+      let year = null;
+      if (this.period.type === PywbPeriod.Type.all) {
+        year = this.period.children[this.period.children.length-1];
+      } else if (this.period.type === PywbPeriod.Type.year) {
+        year = this.period;
+      } else {
+        year = this.period.getParents().filter(p => p.type === PywbPeriod.Type.year)[0];
+      }
+      if (year) {
+        year.fillEmptyChildPeriods(true);
+      }
+      return year;
+    },
+    currentMonth() {
+      let month = null;
+      if (this.period.type === PywbPeriod.Type.month) {
+        month = this.period;
+      } else {
+        month = this.period.getParents().filter(p => p.type === PywbPeriod.Type.month)[0];
+      }
+      return month;
     }
+  }
+};
 </script>
 

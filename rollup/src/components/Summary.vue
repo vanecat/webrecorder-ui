@@ -17,25 +17,25 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            period: {
-                required: true
-            }
-        },
-        computed: {
-            parents: function() {
-                return this.period.getParents();
-            }
-        },
-        methods: {
-            changePeriod(period) {
-                if (period.snapshotCount) {
-                    this.$emit('goto-period', period);
-                }
-            },
-        }
+export default {
+  props: {
+    period: {
+      required: true
     }
+  },
+  computed: {
+    parents: function() {
+      return this.period.getParents();
+    }
+  },
+  methods: {
+    changePeriod(period) {
+      if (period.snapshotCount) {
+        this.$emit("goto-period", period);
+      }
+    },
+  }
+};
 </script>
 
 <style>
