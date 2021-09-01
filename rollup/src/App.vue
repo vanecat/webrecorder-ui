@@ -40,6 +40,7 @@
 import Timeline from "./components/Timeline.vue";
 import TimelineSummary from "./components/Summary.vue";
 import CalendarYear from "./components/CalendarYear.vue";
+
 export default {
   name: "PywbReplayApp",
   //el: '[data-app="webrecorder-replay-app"]',
@@ -51,7 +52,8 @@ export default {
       msgs: [],
       showFullView: false,
       config: {
-        title:""
+        title: "",
+        initialView: {}
       },
       timelineHighlight: false
     };

@@ -4,16 +4,15 @@ import { PywbData } from "./model.js";
 
 import Vue from "vue/dist/vue.esm.browser";
 
-export function init(config, data) {
-  appData.data.config = config;
+export function init(data, config = {}) {
+  const app = new Vue(appData);
 
-  data = new PywbData(data);
-  appData.data.snapshots = data.snapshots;
-  appData.data.currentPeriod = data.timeline;
+  const pywbData = new PywbData(data);
 
-  const app = new Vue({
-    render: (h) => h(appData)
-  });
+  app.$set(app, "snapshots", pywbData.snapshots);
+  app.$set(app, "currentPeriod", pywbData.timeline);
+
+  app.$set(app, "config", {...app.config, config});
 
   app.$mount("#app");
 }
