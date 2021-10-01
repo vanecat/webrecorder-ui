@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div></div>
+<script>
+    fetch('/tests/cdx', {
+        headers: {
+            'connection':'keep-alive',
+            'keep-alive':'timeout=5,max=10'
+        }
+    })
+    .then(r => {
+        return r.text();
+    })
+    .then(text => {
+        document.querySelector('div').innerHTML = text;
+    });
+</script>
+</body>
+</html>
