@@ -30,148 +30,150 @@
 </template>
 
 <script>
-    export default{
-        props: ['period', 'highlight'],
-        data: function() {
-            return {
-                // TODO: remove widths (now using flex css for width calculation)
-                subPeriodBoxWidths: {// in pixels
-                    [PywbPeriod.Type.year]: 80, // year box
-                    [PywbPeriod.Type.month]: 80, // month box in year
-                    [PywbPeriod.Type.day]: 20, // days box in month
-                    [PywbPeriod.Type.hour]: 60, // hour box in day
-                    [PywbPeriod.Type.snapshot]: 10 // snapshot box in hour/day
-                },
-                // TODO: remove widths (now using flex css for width calculation)
-                emptySubPeriodBoxWidths: {// in pixels
-                    [PywbPeriod.Type.year]: 40, // year box
-                    [PywbPeriod.Type.month]: 40, // month box in year
-                    [PywbPeriod.Type.day]: 20, // days box in month
-                    [PywbPeriod.Type.hour]: 40, // hour box in day
-                    [PywbPeriod.Type.snapshot]: 20 // snapshot box in hour/day
-                },
-                highlightPeriod: null,
-                previousPeriod: null,
-                nextPeriod: null,
-                isScrollZero: true,
-                isScrollMax: true,
-            };
-        },
-        created: function() {
-            this.addEmptySubPeriods();
-        },
-        mounted: function() {
-            this.$refs.periods._computedStyle = window.getComputedStyle(this.$refs.periods);
-            this.$refs.periodScroll._computedStyle = window.getComputedStyle(this.$refs.periodScroll);
-            this.$watch('period', this.onPeriodChanged);
-            // TODO: remove widths (now using flex css for width calculation), so we don't need manual calc
-            //this.adjustScrollElWidth();
+import { PywbPeriod } from "../model.js";
 
-            this.$refs.periodScroll.addEventListener('scroll', this.updateScrollArrows);
-            window.addEventListener('resize', this.updateScrollArrows);
-            this.updateScrollArrows();
-        },
-        computed: {
-            subPeriodBoxWidth: function() {
-                return this.subPeriodBoxWidths[this.period.type+1]; // the type of the period children
-            },
-            // TODO: remove widths (now using flex css for width calculation)
-            emptySubPeriodBoxWidth: function() {
-                return this.emptySubPeriodBoxWidths[this.period.type+1]; // the type of the period children
-            },
-            // this determins which the last zoom level is before we go straight to showing snapshot
-            isLastZoomLevel() {
-                return this.period.type === PywbPeriod.Type.day;
-            }
-        },
-        updated() {
-            // do something on update
-        },
-        methods: {
-            addEmptySubPeriods() {
-                this.period.fillEmptyChildPeriods(true);
-            },
-            updateScrollArrows() {
-                this.period.scroll = this.$refs.periodScroll.scrollLeft;
-                const maxScroll = parseInt(this.$refs.periods._computedStyle.width) - parseInt(this.$refs.periodScroll._computedStyle.width);
-                this.isScrollZero = !this.period.scroll; // if 0, then true (we are at scroll zero)
-                this.isScrollMax = Math.abs(maxScroll - this.period.scroll) < 5;
-            },
-            restoreScroll() {
-                this.$refs.periodScroll.scrollLeft = this.period.scroll;
-            },
-            scrollNext: function () {
-                if (this.isScrollMax) {
-                    if (this.nextPeriod) {
-                        this.$emit('goto-period', this.nextPeriod);
-                    }
-                } else {
-                    this.$refs.periodScroll.scrollLeft += 30;
-                }
-            },
-            scrollPrev: function () {
-                if (this.isScrollZero) {
-                    if (this.previousPeriod) {
-                        this.$emit('goto-period', this.previousPeriod);
-                    }
-                } else {
-                    this.$refs.periodScroll.scrollLeft -= 30;
-                }
-            },
-            getTimeFormatted: function(date) {
-                return (date.hour < 13 ? date.hour : (date.hour % 12)) + ':' + ((date.minute < 10 ? '0':'')+date.minute) + ' ' + (date.hour < 12 ? 'am':'pm');
-            },
-            getHistoLineHeight: function(value) {
-                const percent = Math.ceil((value/this.period.maxGrandchildSnapshotCount) * 100);
-                return (percent ? (5 + Math.ceil(percent*.95)) : 0) + '%';
-                // return percent + '%';
-            },
-            changePeriod(period) {
-                if (period.snapshotCount) {
-                    if (this.isLastZoomLevel) {
-                        if (period.type === PywbPeriod.Type.snapshot) {
-                            this.$emit('goto-period', period);
-                        }
-                    } else {
-                        this.$emit('goto-period', period);
-                    }
-                }
-            },
-            // special "change period" from histogram lines
-            changePeriodFromHistogram(period) {
-                if (this.isLastZoomLevel && period.type === PywbPeriod.Type.snapshot) {
-                    this.$emit('goto-period', period);
-                }
-            },
-            onPeriodChanged(newPeriod, oldPeriod) {
-                this.addEmptySubPeriods();
-                this.previousPeriod = this.period.getPrevious();
-                this.nextPeriod = this.period.getNext();
+export default{
+  props: ["period", "highlight"],
+  data: function() {
+    return {
+      // TODO: remove widths (now using flex css for width calculation)
+      subPeriodBoxWidths: {// in pixels
+        [PywbPeriod.Type.year]: 80, // year box
+        [PywbPeriod.Type.month]: 80, // month box in year
+        [PywbPeriod.Type.day]: 20, // days box in month
+        [PywbPeriod.Type.hour]: 60, // hour box in day
+        [PywbPeriod.Type.snapshot]: 10 // snapshot box in hour/day
+      },
+      // TODO: remove widths (now using flex css for width calculation)
+      emptySubPeriodBoxWidths: {// in pixels
+        [PywbPeriod.Type.year]: 40, // year box
+        [PywbPeriod.Type.month]: 40, // month box in year
+        [PywbPeriod.Type.day]: 20, // days box in month
+        [PywbPeriod.Type.hour]: 40, // hour box in day
+        [PywbPeriod.Type.snapshot]: 20 // snapshot box in hour/day
+      },
+      highlightPeriod: null,
+      previousPeriod: null,
+      nextPeriod: null,
+      isScrollZero: true,
+      isScrollMax: true,
+    };
+  },
+  created: function() {
+    this.addEmptySubPeriods();
+  },
+  mounted: function() {
+    this.$refs.periods._computedStyle = window.getComputedStyle(this.$refs.periods);
+    this.$refs.periodScroll._computedStyle = window.getComputedStyle(this.$refs.periodScroll);
+    this.$watch("period", this.onPeriodChanged);
+    // TODO: remove widths (now using flex css for width calculation), so we don't need manual calc
+    //this.adjustScrollElWidth();
 
-                // detect if going up level of period (new period type should be in old period parents)
-                if (oldPeriod.type - newPeriod.type > 0) {
-                    let highlightPeriod = oldPeriod;
-                    for (let i=oldPeriod.type - newPeriod.type; i > 1; i--) {
-                        highlightPeriod = highlightPeriod.parent;
-                    }
-                    this.highlightPeriod = highlightPeriod;
-                    setTimeout((function() {
-                        this.highlightPeriod = null;
-                    }).bind(this), 2000);
-                }
-                setTimeout((function() {
-                    // TODO: remove widths (now using flex css for width calculation), so we don't need manual calc
-                    //this.adjustScrollElWidth();
-                    this.restoreScroll();
-                    this.updateScrollArrows();
-                }).bind(this), 1);
-            },
-            // TODO: remove widths (now using flex css for width calculation), so we don't need manual calc
-            adjustScrollElWidth() {
-                //this.$refs.periodScroll.style.maxWidth = this.$refs.periods._computedStyle.width;
-            }
-        }
+    this.$refs.periodScroll.addEventListener("scroll", this.updateScrollArrows);
+    window.addEventListener("resize", this.updateScrollArrows);
+    this.updateScrollArrows();
+  },
+  computed: {
+    subPeriodBoxWidth: function() {
+      return this.subPeriodBoxWidths[this.period.type+1]; // the type of the period children
+    },
+    // TODO: remove widths (now using flex css for width calculation)
+    emptySubPeriodBoxWidth: function() {
+      return this.emptySubPeriodBoxWidths[this.period.type+1]; // the type of the period children
+    },
+    // this determins which the last zoom level is before we go straight to showing snapshot
+    isLastZoomLevel() {
+      return this.period.type === PywbPeriod.Type.day;
     }
+  },
+  updated() {
+    // do something on update
+  },
+  methods: {
+    addEmptySubPeriods() {
+      this.period.fillEmptyChildPeriods(true);
+    },
+    updateScrollArrows() {
+      this.period.scroll = this.$refs.periodScroll.scrollLeft;
+      const maxScroll = parseInt(this.$refs.periods._computedStyle.width) - parseInt(this.$refs.periodScroll._computedStyle.width);
+      this.isScrollZero = !this.period.scroll; // if 0, then true (we are at scroll zero)
+      this.isScrollMax = Math.abs(maxScroll - this.period.scroll) < 5;
+    },
+    restoreScroll() {
+      this.$refs.periodScroll.scrollLeft = this.period.scroll;
+    },
+    scrollNext: function () {
+      if (this.isScrollMax) {
+        if (this.nextPeriod) {
+          this.$emit("goto-period", this.nextPeriod);
+        }
+      } else {
+        this.$refs.periodScroll.scrollLeft += 30;
+      }
+    },
+    scrollPrev: function () {
+      if (this.isScrollZero) {
+        if (this.previousPeriod) {
+          this.$emit("goto-period", this.previousPeriod);
+        }
+      } else {
+        this.$refs.periodScroll.scrollLeft -= 30;
+      }
+    },
+    getTimeFormatted: function(date) {
+      return (date.hour < 13 ? date.hour : (date.hour % 12)) + ":" + ((date.minute < 10 ? "0":"")+date.minute) + " " + (date.hour < 12 ? "am":"pm");
+    },
+    getHistoLineHeight: function(value) {
+      const percent = Math.ceil((value/this.period.maxGrandchildSnapshotCount) * 100);
+      return (percent ? (5 + Math.ceil(percent*.95)) : 0) + "%";
+      // return percent + '%';
+    },
+    changePeriod(period) {
+      if (period.snapshotCount) {
+        if (this.isLastZoomLevel) {
+          if (period.type === PywbPeriod.Type.snapshot) {
+            this.$emit("goto-period", period);
+          }
+        } else {
+          this.$emit("goto-period", period);
+        }
+      }
+    },
+    // special "change period" from histogram lines
+    changePeriodFromHistogram(period) {
+      if (this.isLastZoomLevel && period.type === PywbPeriod.Type.snapshot) {
+        this.$emit("goto-period", period);
+      }
+    },
+    onPeriodChanged(newPeriod, oldPeriod) {
+      this.addEmptySubPeriods();
+      this.previousPeriod = this.period.getPrevious();
+      this.nextPeriod = this.period.getNext();
+
+      // detect if going up level of period (new period type should be in old period parents)
+      if (oldPeriod.type - newPeriod.type > 0) {
+        let highlightPeriod = oldPeriod;
+        for (let i=oldPeriod.type - newPeriod.type; i > 1; i--) {
+          highlightPeriod = highlightPeriod.parent;
+        }
+        this.highlightPeriod = highlightPeriod;
+        setTimeout((function() {
+          this.highlightPeriod = null;
+        }).bind(this), 2000);
+      }
+      setTimeout((function() {
+        // TODO: remove widths (now using flex css for width calculation), so we don't need manual calc
+        //this.adjustScrollElWidth();
+        this.restoreScroll();
+        this.updateScrollArrows();
+      }).bind(this), 1);
+    },
+    // TODO: remove widths (now using flex css for width calculation), so we don't need manual calc
+    adjustScrollElWidth() {
+      //this.$refs.periodScroll.style.maxWidth = this.$refs.periods._computedStyle.width;
+    }
+  }
+};
 </script>
 
 
